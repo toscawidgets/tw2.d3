@@ -10,7 +10,7 @@ class js(twc.JSSymbol):
     def __init__(self, src):
         super(js, self).__init__(src=src)
 
-class AreaChart(twp.PVPanel):
+class AreaChart(twp.PVWidget):
     p_data = twc.Param('(list) data for the chart')
     p_width = twc.Param('TODO', default=400)
     p_height = twc.Param('TODO', default=200)
@@ -41,8 +41,7 @@ class AreaChart(twp.PVPanel):
                 .left(js('x')) \
                 .bottom(-5) \
                 .height(5) \
-                .add(pv.Label) \
-                .bottom(-5) \
+                .anchor("bottom").add(pv.Label) \
                 .text(js('x.tickFormat'))
 
         self.add(pv.Rule) \
@@ -53,10 +52,10 @@ class AreaChart(twp.PVPanel):
                 .add(pv.Label).text(js('y.tickFormat'))
 
         self.add(pv.Area) \
-                 .data(js('data')) \
-                 .bottom(1) \
-                 .left(js('function(d) x(d.x)')) \
-                 .height(twc.JSSymbol(src='function(d) y(d.y)')) \
-                 .fillStyle(self.p_color) \
-                 .anchor('top').add(pv.Line).lineWidth(3)
+                .data(js('data')) \
+                .bottom(1) \
+                .left(js('function(d) x(d.x)')) \
+                .height(twc.JSSymbol(src='function(d) y(d.y)')) \
+                .fillStyle(self.p_color) \
+                .anchor('top').add(pv.Line).lineWidth(3)
 
