@@ -11,30 +11,26 @@ class js(twc.JSSymbol):
         super(js, self).__init__(src=src)
 
 class AreaChart(twp.PVWidget):
-    p_data = twc.Param('(list) data for the chart')
-    p_width = twc.Param('TODO', default=400)
-    p_height = twc.Param('TODO', default=200)
-    p_bottom = twc.Param('TODO', default=20)
-    p_top = twc.Param('TODO', default=5)
-    p_left = twc.Param('TODO', default=20)
-    p_right = twc.Param('TODO', default=10)
-    p_color = twc.Param('TODO', default='rgb(121,173,210)')
+    p_color = twc.Param('Color of the area', default='rgb(121,173,210)')
 
     def prepare(self):
         super(AreaChart, self).prepare()
-        self.init_js = twc.JSSymbol(
-            src="""
+        # Use pre-init javascript to set up sizing and scales
+        self.init_js = js(
+            """
             var data = %s,
                 w = %i,
                 h = %i,
                 x = pv.Scale.linear(data, function(d) d.x).range(0, w),
                 y = pv.Scale.linear(0, 4).range(0, h);
-            """ % (self.py_data, self.p_width, self.p_height))
-                          
+            """ % (self.p_data, self.p_width, self.p_height))
+
+        # Set up the root panel
         self.init().width(self.p_width).height(self.p_height) \
                 .bottom(self.p_bottom).top(self.p_top) \
                 .left(self.p_left).right(self.p_right)
 
+        # X-axis and ticks
         self.add(pv.Rule) \
                 .data(js('x.ticks()')) \
                 .visible(js('function(d) { return d }')) \
@@ -44,6 +40,7 @@ class AreaChart(twp.PVWidget):
                 .anchor("bottom").add(pv.Label) \
                 .text(js('x.tickFormat'))
 
+        # Y-axis and ticks
         self.add(pv.Rule) \
                 .data(js('y.ticks(5)')) \
                 .bottom(js('y')) \
@@ -51,11 +48,59 @@ class AreaChart(twp.PVWidget):
                 .anchor("left")\
                 .add(pv.Label).text(js('y.tickFormat'))
 
+        # The area with the top line
         self.add(pv.Area) \
                 .data(js('data')) \
                 .bottom(1) \
                 .left(js('function(d) x(d.x)')) \
-                .height(twc.JSSymbol(src='function(d) y(d.y)')) \
+                .height(js('function(d) y(d.y)')) \
                 .fillStyle(self.p_color) \
                 .anchor('top').add(pv.Line).lineWidth(3)
 
+class BarChart(twp.PVWidget):
+    def prepare(self):
+        super(BarChart, self).prepare()
+        # Sizing and scales.
+        self.init_js = js(
+            """
+            var data = %s,
+                w = %i,
+                h = %i,
+                x = pv.Scale.linear(0, 1,1).range(0, w),
+                y = pv.Scale.ordinal(pv.range(10)).splitBanded(0, h, 4/5);
+            """ % (self.p_data, self.p_width, self.p_height))
+
+        # Set up the root panel
+        self.init().width(self.p_width).height(self.p_height) \
+                .bottom(self.p_bottom).top(self.p_top) \
+                .left(self.p_left).right(self.p_right)
+
+        # The bars.
+        bar = self.add(pv.Bar).data(self.p_data)\
+                .top(js('function() y(this.index)'))\
+                .height(js('y.range().band'))\
+                .left(0)\
+                .width(js('x'))
+
+        # The value label.
+        bar.anchor("right").add(pv.Label)\
+                .textStyle("white")\
+                .text(js('function(d) d.toFixed(1)'))
+
+        # The variable label.
+        bar.anchor("left").add(pv.Label)\
+            .textMargin(5)\
+            .textAlign("right")\
+            .text(js('function() "ABCDEFGHIJK".charAt(this.index)'))
+
+        # X-axis ticks.
+        self.add(pv.Rule)\
+            .data(js('x.ticks(5)'))\
+            .left(js('x'))\
+            .strokeStyle(js('function(d) d ? "rgba(255,255,255,.3)" : "#000"'))\
+          .add(pv.Rule)\
+            .bottom(0)\
+            .height(5)\
+            .strokeStyle("#000")\
+          .anchor("bottom").add(pv.Label)\
+            .text(js('x.tickFormat'))

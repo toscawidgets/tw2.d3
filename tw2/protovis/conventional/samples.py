@@ -6,12 +6,15 @@ widget here with some parameters filled out.
 The demos implemented here are what is displayed in the tw2.devtools
 WidgetBrowser.
 """
-from widgets import AreaChart
+from widgets import AreaChart, BarChart
 from tw2.core import JSSymbol
 
 import math
 import random
 
 class DemoAreaChart(AreaChart):
-    py_data = [{'x': i, 'y' : math.sin(i) + random.random() * .5 + 2}
+    p_data = [{'x': i, 'y' : math.sin(i) + random.random() * .5 + 2}
                 for i in map(lambda x : x / 10.0, range(100))]
+
+class DemoBarChart(BarChart):
+    p_data = [random.random() for i in range(10)]
