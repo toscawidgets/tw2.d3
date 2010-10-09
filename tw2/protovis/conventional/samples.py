@@ -6,7 +6,12 @@ widget here with some parameters filled out.
 The demos implemented here are what is displayed in the tw2.devtools
 WidgetBrowser.
 """
-from widgets import AreaChart, BarChart, StreamGraph
+from widgets import (
+    AreaChart,
+    BarChart,
+    ScatterPlot,
+    StreamGraph,
+)
 from widgets import js
 from tw2.core import JSSymbol
 
@@ -19,6 +24,10 @@ class DemoAreaChart(AreaChart):
 
 class DemoBarChart(BarChart):
     p_data = [random.random() for i in range(10)]
+
+class DemoScatterPlot(ScatterPlot):
+    p_data = [{'x': i, 'y' : random.random(), 'z' : 10**(2*random.random())}
+                for i in range(100)]
 
 # The following are some data generation functions used by the streamgraph demo
 def waves(n, m):

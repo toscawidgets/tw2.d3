@@ -104,6 +104,53 @@ class BarChart(twp.PVWidget):
             .strokeStyle("#000")\
           .anchor("bottom").add(pv.Label)\
             .text(js('x.tickFormat'))
+        
+class ScatterPlot(twp.PVWidget):
+    def prepare(self):
+        # Sizing and scales.
+        self.init_js = js(
+            """
+            var data = %s,
+                w = %i,
+                h = %i,
+                x = pv.Scale.linear(0, 99).range(0, w),
+                y = pv.Scale.linear(0, 1).range(0, h),
+                c = pv.Scale.log(1, 100).range("orange", "brown");
+            """ % (self.p_data, self.p_width, self.p_height))
+
+        # The root panel.
+        self.init().width(self.p_width).height(self.p_height) \
+                .bottom(self.p_bottom).top(self.p_top) \
+                .left(self.p_left).right(self.p_right)
+
+        # Y-axis and ticks.
+        self.add(pv.Rule) \
+            .data(js('y.ticks()')) \
+            .bottom(js('y')) \
+            .strokeStyle(js('function(d) d ? "#eee" : "#000"')) \
+          .anchor("left").add(pv.Label) \
+            .visible(js('function(d) d > 0 && d < 1')) \
+            .text(js('y.tickFormat'))
+
+        # X-axis and ticks.
+        self.add(pv.Rule) \
+            .data(js('x.ticks()')) \
+            .left(js('x')) \
+            .strokeStyle(js('function(d) d ? "#eee" : "#000"')) \
+          .anchor("bottom").add(pv.Label) \
+            .visible(js('function(d) d > 0 && d < 100')) \
+            .text(js('x.tickFormat'))
+
+        # The dot plot!
+        self.add(pv.Panel) \
+            .data(js('data')) \
+          .add(pv.Dot) \
+            .left(js('function(d) x(d.x)')) \
+            .bottom(js('function(d) y(d.y)')) \
+            .strokeStyle(js('function(d) c(d.z)'))  \
+            .fillStyle(js('function() this.strokeStyle().alpha(.2)'))  \
+            .size(js('function(d) d.z')) \
+            .title(js('function(d) d.z.toFixed(1)'))
 
 class StreamGraph(twp.PVWidget):
     def prepare(self):
