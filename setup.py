@@ -16,8 +16,6 @@ setup(
     install_requires=[
         "tw2.core",
         "tw2.protovis.core",
-        "genshi",
-        "mako",
         ],
     packages=find_packages(exclude=['ez_setup']),
     namespace_packages = ['tw2'],
