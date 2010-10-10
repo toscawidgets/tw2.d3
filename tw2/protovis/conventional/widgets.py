@@ -316,27 +316,3 @@ class GroupedBarChart(twp.PVWidget):
             .strokeStyle("#000") \
           .anchor("bottom").add(pv.Label) \
             .text(js('x.tickFormat'))
-
-class StreamGraph(twp.PVWidget):
-    def prepare(self):
-        self.init_js = js(
-            """
-            var n = 20, m = 400;
-            var data = %s,
-                w = %i,
-                h = %i,
-                x = pv.Scale.linear(0, m - 1).range(0, w),
-                y = pv.Scale.linear(0, 2 * n).range(0, h);
-            """ % (self.p_data, self.p_width, self.p_height))
-        
-        self.setupRootPanel()
-
-        self.add(pv.Layout.Stack)\
-                .layers(js('data'))\
-                .order('inside-out')\
-                .offset('wiggle')\
-                .x(js('x.by(pv.index)'))\
-                .y(js('y'))\
-              .layer.add(pv.Area)\
-                .fillStyle(js('pv.ramp("#aad", "#556").by(Math.random)'))\
-                .strokeStyle(js('function() this.fillStyle().alpha(0.5)'))
