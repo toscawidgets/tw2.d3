@@ -173,6 +173,17 @@ class PieChart(twp.PVWidget):
             .text(js('function(d) d.toFixed(2)'))
 
 class LineChart(twp.PVWidget):
+    p_interpolate = twc.Param(
+        """How to interpolate between values. Linear interpolation ("linear")
+        is the default, producing a straight line between points. For
+        piecewise constant functions (i.e., step functions), either
+        "step-before" or "step-after" can be specified. To draw a clockwise
+        circular arc between points, specify "polar"; to draw a counter
+        clockwise circular arc between points, specify "polar-reverse". To
+        draw open uniform b-splines, specify "basis". To draw cardinal
+        splines, specify "cardinal"; see also #tension.
+        """, default='linear')
+
     def prepare(self):
         # Sizing and scales.
         self.init_js = js(
@@ -210,10 +221,11 @@ class LineChart(twp.PVWidget):
         # The line.
         self.add(pv.Line) \
             .data(js('data')) \
-            .interpolate("step-after") \
+            .interpolate(self.p_interpolate) \
             .left(js('function(d) x(d.x)')) \
             .bottom(js('function(d) y(d.y)')) \
             .lineWidth(3)
+
 class StackedAreaChart(twp.PVWidget):
     def prepare(self):
         # Sizing and scales.
