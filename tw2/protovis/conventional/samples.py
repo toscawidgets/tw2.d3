@@ -13,8 +13,7 @@ from widgets import (
     PieChart,
     LineChart,
     StackedAreaChart,
-    GroupedBarChart,
-    StreamGraph,
+    GroupedBarChart
 )
 from widgets import js
 from tw2.core import JSSymbol
