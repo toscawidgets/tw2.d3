@@ -184,6 +184,52 @@ class PieChart(twp.PVWidget):
             .textAngle(0) \
             .text(js('function(d) d.toFixed(2)'))
 
+class LineChart(twp.PVWidget):
+    def prepare(self):
+        # Sizing and scales.
+        self.init_js = js(
+            """
+            var data = %s,
+                w = %i,
+                h = %i,
+                x = pv.Scale.linear(data, function(d) d.x).range(0, w),
+                y = pv.Scale.linear(0, 4).range(0, h);
+            """ % (self.p_data, self.p_width, self.p_height))
+
+        # Set up the root panel
+        self.init().width(self.p_width).height(self.p_height) \
+                .bottom(self.p_bottom).top(self.p_top) \
+                .left(self.p_left).right(self.p_right)
+
+        # X-axis ticks.
+        self.add(pv.Rule) \
+            .data(js('x.ticks()')) \
+            .visible(js('function(d) d > 0')) \
+            .left(js('x')) \
+            .strokeStyle("#eee") \
+          .add(pv.Rule) \
+            .bottom(-5) \
+            .height(5) \
+            .strokeStyle("#000") \
+          .anchor("bottom").add(pv.Label) \
+            .text(js('x.tickFormat'))
+
+        # Y-axis ticks.
+        self.add(pv.Rule) \
+            .data(js('y.ticks(5)')) \
+            .bottom(js('y')) \
+            .strokeStyle(js('function(d) d ? "#eee" : "#000"')) \
+          .anchor("left").add(pv.Label) \
+            .text(js('y.tickFormat'))
+
+        # The line.
+        self.add(pv.Line) \
+            .data(js('data')) \
+            .interpolate("step-after") \
+            .left(js('function(d) x(d.x)')) \
+            .bottom(js('function(d) y(d.y)')) \
+            .lineWidth(3)
+
 class StreamGraph(twp.PVWidget):
     def prepare(self):
         self.init_js = js(
@@ -195,11 +241,12 @@ class StreamGraph(twp.PVWidget):
                 x = pv.Scale.linear(0, m - 1).range(0, w),
                 y = pv.Scale.linear(0, 2 * n).range(0, h);
             """ % (self.p_data, self.p_width, self.p_height))
-
+        
         # Set up the root panel
         self.init().width(self.p_width).height(self.p_height) \
                 .bottom(self.p_bottom).top(self.p_top) \
                 .left(self.p_left).right(self.p_right)
+
 
         self.add(pv.Layout.Stack)\
                 .layers(js('data'))\

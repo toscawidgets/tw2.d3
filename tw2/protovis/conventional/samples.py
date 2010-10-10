@@ -11,6 +11,7 @@ from widgets import (
     BarChart,
     ScatterPlot,
     PieChart,
+    LineChart,
     StreamGraph,
 )
 from widgets import js
@@ -32,6 +33,10 @@ class DemoScatterPlot(ScatterPlot):
 
 class DemoPieChart(PieChart):
     p_data = [random.random() for i in range(10)]
+
+class DemoLineChart(LineChart):
+    p_data = [{'x': i, 'y' : math.sin(i) + random.random() + 1.5}
+                for i in map(lambda x : x / 5.0, range(50))]
 
 # The following are some data generation functions used by the streamgraph demo
 def waves(n, m):
