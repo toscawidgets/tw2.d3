@@ -229,6 +229,47 @@ class LineChart(twp.PVWidget):
             .left(js('function(d) x(d.x)')) \
             .bottom(js('function(d) y(d.y)')) \
             .lineWidth(3)
+class StackedAreaChart(twp.PVWidget):
+    def prepare(self):
+        # Sizing and scales.
+        self.init_js = js(
+            """
+            var data = %s,
+                w = %i,
+                h = %i,
+                x = pv.Scale.linear(0, 9.9).range(0, w),
+                y = pv.Scale.linear(0, 14).range(0, h);
+            """ % (self.p_data, self.p_width, self.p_height))
+        
+        # Set up the root panel
+        self.init().width(self.p_width).height(self.p_height) \
+                .bottom(self.p_bottom).top(self.p_top) \
+                .left(self.p_left).right(self.p_right)
+        
+        # X-axis and ticks.
+        self.add(pv.Rule) \
+            .data(js('x.ticks()')) \
+            .visible(js('function(d) d')) \
+            .left(js('x')) \
+            .bottom(-5) \
+            .height(5) \
+          .anchor("bottom").add(pv.Label) \
+            .text(js('x.tickFormat'))
+
+        # The stack layout.
+        self.add(pv.Layout.Stack) \
+            .layers(js('data')) \
+            .x(js('function(d) x(d.x)')) \
+            .y(js('function(d) y(d.y)')) \
+          .layer.add(pv.Area)
+
+        # Y-axis and ticks.
+        self.add(pv.Rule) \
+            .data(js('y.ticks(3)')) \
+            .bottom(js('y')) \
+            .strokeStyle(js('function(d) d ? "rgba(128,128,128,.2)" : "#000"'))\
+          .anchor("left").add(pv.Label) \
+            .text(js('y.tickFormat'))
 
 class StreamGraph(twp.PVWidget):
     def prepare(self):

@@ -12,6 +12,7 @@ from widgets import (
     ScatterPlot,
     PieChart,
     LineChart,
+    StackedAreaChart,
     StreamGraph,
 )
 from widgets import js
@@ -37,6 +38,17 @@ class DemoPieChart(PieChart):
 class DemoLineChart(LineChart):
     p_data = [{'x': i, 'y' : math.sin(i) + random.random() + 1.5}
                 for i in map(lambda x : x / 5.0, range(50))]
+
+class DemoStackedAreaChart(StackedAreaChart):
+    p_data = [
+        [
+            {
+                'series' : i,
+                'x': j / 10.0,
+                'y' : math.sin(j/10.0) + random.random() * .5  + 2
+            } for j in range(100)
+        ] for i in range(5)
+    ]
 
 # The following are some data generation functions used by the streamgraph demo
 def waves(n, m):
