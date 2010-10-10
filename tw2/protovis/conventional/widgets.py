@@ -152,6 +152,38 @@ class ScatterPlot(twp.PVWidget):
             .size(js('function(d) d.z')) \
             .title(js('function(d) d.z.toFixed(1)'))
 
+class PieChart(twp.PVWidget):
+    def prepare(self):
+        # Sizing and scales.
+        self.init_js = js(
+            """
+            var data = %s,
+                w = %i,
+                h = %i,
+                r = h > w ? w / 2 : h / 2,
+                a = pv.Scale.linear(0, pv.sum(data)).range(0, 2 * Math.PI);
+            """ % (self.p_data, self.p_width, self.p_height))
+
+        # The root panel.
+        self.init().width(self.p_width).height(self.p_height) \
+                .bottom(self.p_bottom).top(self.p_top) \
+                .left(self.p_left).right(self.p_right)
+
+        # The wedge, with centered label.
+        self.add(pv.Wedge) \
+            .data(js('data.sort(pv.reverseOrder)')) \
+            .bottom(js('r')) \
+            .left(js('r')) \
+            .innerRadius(js('r - 40')) \
+            .outerRadius(js('r')) \
+            .angle(js('a')) \
+            .event("mouseover", js('function() this.innerRadius(0)')) \
+            .event("mouseout", js('function() this.innerRadius(r - 40)')) \
+          .anchor("center").add(pv.Label) \
+            .visible(js('function(d) d > .15')) \
+            .textAngle(0) \
+            .text(js('function(d) d.toFixed(2)'))
+
 class StreamGraph(twp.PVWidget):
     def prepare(self):
         self.init_js = js(
