@@ -25,10 +25,7 @@ class AreaChart(twp.PVWidget):
                 y = pv.Scale.linear(0, 4).range(0, h);
             """ % (self.p_data, self.p_width, self.p_height))
 
-        # Set up the root panel
-        self.init().width(self.p_width).height(self.p_height) \
-                .bottom(self.p_bottom).top(self.p_top) \
-                .left(self.p_left).right(self.p_right)
+        self.setupRootPanel()
 
         # X-axis and ticks
         self.add(pv.Rule) \
@@ -70,10 +67,7 @@ class BarChart(twp.PVWidget):
                 y = pv.Scale.ordinal(pv.range(10)).splitBanded(0, h, 4/5);
             """ % (self.p_data, self.p_width, self.p_height))
 
-        # Set up the root panel
-        self.init().width(self.p_width).height(self.p_height) \
-                .bottom(self.p_bottom).top(self.p_top) \
-                .left(self.p_left).right(self.p_right)
+        self.setupRootPanel()
 
         # The bars.
         bar = self.add(pv.Bar).data(self.p_data)\
@@ -118,10 +112,7 @@ class ScatterPlot(twp.PVWidget):
                 c = pv.Scale.log(1, 100).range("orange", "brown");
             """ % (self.p_data, self.p_width, self.p_height))
 
-        # The root panel.
-        self.init().width(self.p_width).height(self.p_height) \
-                .bottom(self.p_bottom).top(self.p_top) \
-                .left(self.p_left).right(self.p_right)
+        self.setupRootPanel()
 
         # Y-axis and ticks.
         self.add(pv.Rule) \
@@ -164,10 +155,7 @@ class PieChart(twp.PVWidget):
                 a = pv.Scale.linear(0, pv.sum(data)).range(0, 2 * Math.PI);
             """ % (self.p_data, self.p_width, self.p_height))
 
-        # The root panel.
-        self.init().width(self.p_width).height(self.p_height) \
-                .bottom(self.p_bottom).top(self.p_top) \
-                .left(self.p_left).right(self.p_right)
+        self.setupRootPanel()
 
         # The wedge, with centered label.
         self.add(pv.Wedge) \
@@ -196,10 +184,7 @@ class LineChart(twp.PVWidget):
                 y = pv.Scale.linear(0, 4).range(0, h);
             """ % (self.p_data, self.p_width, self.p_height))
 
-        # Set up the root panel
-        self.init().width(self.p_width).height(self.p_height) \
-                .bottom(self.p_bottom).top(self.p_top) \
-                .left(self.p_left).right(self.p_right)
+        self.setupRootPanel()
 
         # X-axis ticks.
         self.add(pv.Rule) \
@@ -241,10 +226,7 @@ class StackedAreaChart(twp.PVWidget):
                 y = pv.Scale.linear(0, 14).range(0, h);
             """ % (self.p_data, self.p_width, self.p_height))
         
-        # Set up the root panel
-        self.init().width(self.p_width).height(self.p_height) \
-                .bottom(self.p_bottom).top(self.p_top) \
-                .left(self.p_left).right(self.p_right)
+        self.setupRootPanel()
         
         # X-axis and ticks.
         self.add(pv.Rule) \
@@ -285,10 +267,7 @@ class GroupedBarChart(twp.PVWidget):
                 y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, h, 4/5);
             """ % (self.p_data, self.p_width, self.p_height))
 
-        # Set up the root panel
-        self.init().width(self.p_width).height(self.p_height) \
-                .bottom(self.p_bottom).top(self.p_top) \
-                .left(self.p_left).right(self.p_right)
+        self.setupRootPanel()
 
         # The bars.
         bar = self.add(pv.Panel) \
@@ -338,10 +317,7 @@ class StreamGraph(twp.PVWidget):
                 y = pv.Scale.linear(0, 2 * n).range(0, h);
             """ % (self.p_data, self.p_width, self.p_height))
         
-        # Set up the root panel
-        self.init().width(self.p_width).height(self.p_height) \
-                .bottom(self.p_bottom).top(self.p_top) \
-                .left(self.p_left).right(self.p_right)
+        self.setupRootPanel()
 
         self.add(pv.Layout.Stack)\
                 .layers(js('data'))\
