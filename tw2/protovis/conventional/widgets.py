@@ -276,9 +276,10 @@ class GroupedBarChart(twp.PVWidget):
         # Sizing and scales.
         self.init_js = js(
             """
-            var n = 3, m = 4;
-            var data = %s,
-                w = %i,
+            var data = %s;
+            var n = data.length;
+            var m = data[0].length;
+            var w = %i,
                 h = %i,
                 x = pv.Scale.linear(0, 1.1).range(0, w),
                 y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, h, 4/5);
