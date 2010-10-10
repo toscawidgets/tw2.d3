@@ -13,6 +13,7 @@ from widgets import (
     PieChart,
     LineChart,
     StackedAreaChart,
+    GroupedBarChart,
     StreamGraph,
 )
 from widgets import js
@@ -49,6 +50,10 @@ class DemoStackedAreaChart(StackedAreaChart):
             } for j in range(100)
         ] for i in range(5)
     ]
+
+class DemoGroupedBarChart(GroupedBarChart):
+    p_data = [
+        [random.random() + 0.1 for j in range(4)] for i in range(3)]
 
 # The following are some data generation functions used by the streamgraph demo
 def waves(n, m):

@@ -271,6 +271,60 @@ class StackedAreaChart(twp.PVWidget):
           .anchor("left").add(pv.Label) \
             .text(js('y.tickFormat'))
 
+class GroupedBarChart(twp.PVWidget):
+    def prepare(self):
+        # Sizing and scales.
+        self.init_js = js(
+            """
+            var n = 3, m = 4;
+            var data = %s,
+                w = %i,
+                h = %i,
+                x = pv.Scale.linear(0, 1.1).range(0, w),
+                y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, h, 4/5);
+            """ % (self.p_data, self.p_width, self.p_height))
+
+        # Set up the root panel
+        self.init().width(self.p_width).height(self.p_height) \
+                .bottom(self.p_bottom).top(self.p_top) \
+                .left(self.p_left).right(self.p_right)
+
+        # The bars.
+        bar = self.add(pv.Panel) \
+            .data(js('data')) \
+            .top(js('function() y(this.index)')) \
+            .height(js('y.range().band')) \
+          .add(pv.Bar) \
+            .data(js('function(d) d')) \
+            .top(js('function() this.index * y.range().band / m')) \
+            .height(js('y.range().band / m')) \
+            .left(0) \
+            .width(js('x')) \
+            .fillStyle(js('pv.Colors.category20().by(pv.index)'))
+
+        # The value label.
+        bar.anchor("right").add(pv.Label) \
+            .textStyle("white") \
+            .text(js('function(d) d.toFixed(1)'))
+
+        # The variable label.
+        bar._parent.anchor("left").add(pv.Label) \
+            .textAlign("right") \
+            .textMargin(5) \
+            .text(js('function() "ABCDEFGHIJK".charAt(this.parent.index)'))
+
+        # X-axis ticks.
+        self.add(pv.Rule) \
+            .data(js('x.ticks(5)')) \
+            .left(js('x')) \
+            .strokeStyle(js('function(d) d ? "rgba(255,255,255,.3)" : "#000"'))\
+          .add(pv.Rule) \
+            .bottom(0) \
+            .height(5) \
+            .strokeStyle("#000") \
+          .anchor("bottom").add(pv.Label) \
+            .text(js('x.tickFormat'))
+
 class StreamGraph(twp.PVWidget):
     def prepare(self):
         self.init_js = js(
@@ -287,7 +341,6 @@ class StreamGraph(twp.PVWidget):
         self.init().width(self.p_width).height(self.p_height) \
                 .bottom(self.p_bottom).top(self.p_top) \
                 .left(self.p_left).right(self.p_right)
-
 
         self.add(pv.Layout.Stack)\
                 .layers(js('data'))\
