@@ -9,6 +9,7 @@ $(
 virtualenv $venv --no-site-packages
 
 source $venv/bin/activate
+pip install genshi
 pushd $devbase
 hg clone http://bitbucket.org/paj/tw2core || echo "tw2core exists."
 hg clone http://bitbucket.org/paj/tw2devtools || echo "tw2devtools exists."
