@@ -63,8 +63,8 @@ class BarChart(twp.PVWidget):
             var data = %s,
                 w = %i,
                 h = %i,
-                x = pv.Scale.linear(0, 1,1).range(0, w),
-                y = pv.Scale.ordinal(pv.range(10)).splitBanded(0, h, 4/5);
+                x = pv.Scale.linear(0, pv.max(data)).range(0, w),
+                y = pv.Scale.ordinal(pv.range(data.length)).splitBanded(0, h, 4/5);
             """ % (self.p_data, self.p_width, self.p_height))
 
         self.setupRootPanel()

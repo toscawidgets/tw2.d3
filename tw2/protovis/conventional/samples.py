@@ -26,7 +26,7 @@ class DemoAreaChart(AreaChart):
                 for i in map(lambda x : x / 10.0, range(100))]
 
 class DemoBarChart(BarChart):
-    p_data = [random.random() for i in range(10)]
+    p_data = [random.random()*100 for i in range(10)]
 
 class DemoScatterPlot(ScatterPlot):
     p_data = [{'x': i, 'y' : random.random(), 'z' : 10**(2*random.random())}
