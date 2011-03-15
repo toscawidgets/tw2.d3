@@ -284,7 +284,10 @@ class StackedAreaChart(twp.PVWidget):
             .text(js('y.tickFormat'))
 
 class GroupedBarChart(twp.PVWidget):
+    p_labels= twc.Param('list of label strings')
     def prepare(self):
+        if len(self.p_labels) != len(self.p_data):
+           raise ValueError, 'Barchart must have same # of labels and data'
 
         super(GroupedBarChart, self).prepare()
 
@@ -297,8 +300,9 @@ class GroupedBarChart(twp.PVWidget):
             var w = %i,
                 h = %i,
                 x = pv.Scale.linear(0, 1.1).range(0, w),
-                y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, h, 4/5);
-            """ % (self.p_data, self.p_width, self.p_height))
+                y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, h, 4/5),
+                labels = %s;
+            """ % (self.p_data, self.p_width, self.p_height, self.p_labels))
 
         self.setupRootPanel()
 
@@ -321,10 +325,11 @@ class GroupedBarChart(twp.PVWidget):
             .text(js('function(d) d.toFixed(1)'))
 
         # The variable label.
+        print '%s' % self.p_labels
         bar._parent.anchor("left").add(pv.Label) \
             .textAlign("right") \
             .textMargin(5) \
-            .text(js('function() "ABCDEFGHIJK".charAt(this.parent.index)'))
+            .text(js("function() labels[this.parent.index]"))
 
         # X-axis ticks.
         self.add(pv.Rule) \
