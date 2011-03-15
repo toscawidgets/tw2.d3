@@ -304,6 +304,8 @@ class GroupedBarChart(twp.PVWidget):
                 labels = %s;
             """ % (self.p_data, self.p_width, self.p_height, self.p_labels))
 
+        self.p_left = 7 * max([len(items) for items in self.p_labels])
+
         self.setupRootPanel()
 
         # The bars.
