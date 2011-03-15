@@ -4,6 +4,7 @@ tw2.jit.egg-info
 *.swp
 virtualenv-tw2.jit
 tw2core
+tw2.devtools
 tw2devtools
 tw2.protovis.core
 README.pdf

@@ -12,10 +12,10 @@ source $venv/bin/activate
 pip install genshi
 pushd $devbase
 hg clone http://bitbucket.org/ralphbean/tw2core || echo "tw2core exists."
-hg clone http://bitbucket.org/ralphbean/tw2devtools || echo "tw2devtools exists."
+hg clone http://bitbucket.org/ralphbean/tw2.devtools || echo "tw2.devtools exists."
 git clone http://github.com/ralphbean/tw2.protovis.core.git || echo "tw2.protovis.core exists."
 pushd tw2core;hg pull;python setup.py develop;popd
-pushd tw2devtools;hg pull;python setup.py develop;popd
+pushd tw2.devtools;hg pull;python setup.py develop;popd
 pushd tw2.protovis.core;git pull;python setup.py develop;popd
 popd
 
