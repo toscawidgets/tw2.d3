@@ -55,8 +55,13 @@ class AreaChart(twp.PVWidget):
                 .anchor('top').add(pv.Line).lineWidth(3)
 
 class BarChart(twp.PVWidget):
+    p_labels= twc.Param('list of label strings')
     def prepare(self):
+        if len(self.p_labels) != len(self.p_data):
+           raise ValueError, 'Barchart must have same # of labels and data'
+
         super(BarChart, self).prepare()
+
         # Sizing and scales.
         self.init_js = js(
             """
@@ -64,8 +69,9 @@ class BarChart(twp.PVWidget):
                 w = %i,
                 h = %i,
                 x = pv.Scale.linear(0, pv.max(data)).range(0, w),
-                y = pv.Scale.ordinal(pv.range(data.length)).splitBanded(0, h, 4/5);
-            """ % (self.p_data, self.p_width, self.p_height))
+                y = pv.Scale.ordinal(pv.range(data.length)).splitBanded(0, h, 4/5),
+                labels = %s;
+            """ % (self.p_data, self.p_width, self.p_height, self.p_labels))
 
         self.setupRootPanel()
 
@@ -85,7 +91,7 @@ class BarChart(twp.PVWidget):
         bar.anchor("left").add(pv.Label)\
             .textMargin(5)\
             .textAlign("right")\
-            .text(js('function() "ABCDEFGHIJK".charAt(this.index)'))
+            .text(js('function() labels[this.index]'))
 
         # X-axis ticks.
         self.add(pv.Rule)\
