@@ -54,3 +54,4 @@ class DemoStackedAreaChart(StackedAreaChart):
 class DemoGroupedBarChart(GroupedBarChart):
     p_data = [
         [random.random() + 0.1 for j in range(4)] for i in range(3)]
+    p_labels = ['DataSet1', 'Dataset2', 'Dataset3']
