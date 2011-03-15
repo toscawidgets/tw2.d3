@@ -244,7 +244,15 @@ class LineChart(twp.PVWidget):
             .lineWidth(3)
 
 class StackedAreaChart(twp.PVWidget):
+    p_labels = twc.Param('list of label strings', default=[])
+
     def prepare(self):
+        if self.p_labels and len(self.p_labels) != len(self.p_data):
+           raise ValueError, \
+                   "%s must have same # labels(%i) and data(%i)" % (
+                       type(self).__name__,
+                       len(self.p_labels),
+                       len(self.p_data))
 
         super(StackedAreaChart, self).prepare()
 
@@ -255,8 +263,9 @@ class StackedAreaChart(twp.PVWidget):
                 w = %i,
                 h = %i,
                 x = pv.Scale.linear(0, 9.9).range(0, w),
-                y = pv.Scale.linear(0, 14).range(0, h);
-            """ % (self.p_data, self.p_width, self.p_height))
+                y = pv.Scale.linear(0, 14).range(0, h),
+                labels = %s;
+            """ % (self.p_data, self.p_width, self.p_height, self.p_labels))
         
         self.setupRootPanel()
         
@@ -284,6 +293,22 @@ class StackedAreaChart(twp.PVWidget):
             .strokeStyle(js('function(d) d ? "rgba(128,128,128,.2)" : "#000"'))\
           .anchor("left").add(pv.Label) \
             .text(js('y.tickFormat'))
+
+        if self.p_labels:
+            # A legend entry for each person.
+            self.add(pv.Bar) \
+              .data(js('data')) \
+              .top(5).left(5) \
+              .width(max(map(len, self.p_labels)) * 8 + 5) \
+              .height(len(self.p_labels) * 12) \
+              .fillStyle('white').strokeStyle('black').lineWidth(0.4) \
+            .add(pv.Dot) \
+              .left(10) \
+              .top(js('function() this.index * 12 + 10')) \
+              .fillStyle(js('pv.Colors.category20().by(pv.index)')) \
+              .strokeStyle(None) \
+            .anchor("right").add(pv.Label) \
+              .text(js('function() labels[this.index]'))
 
 class GroupedBarChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings')

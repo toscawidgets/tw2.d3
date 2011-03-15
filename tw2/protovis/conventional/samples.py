@@ -50,6 +50,7 @@ class DemoStackedAreaChart(StackedAreaChart):
             } for j in range(100)
         ] for i in range(5)
     ]
+    p_labels = ["billy", "bobby", "sally", "suzie", "balthazar"]
 
 class DemoGroupedBarChart(GroupedBarChart):
     p_data = [
