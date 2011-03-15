@@ -107,6 +107,9 @@ class BarChart(twp.PVWidget):
         
 class ScatterPlot(twp.PVWidget):
     def prepare(self):
+
+        super(ScatterPlot, self).prepare()
+
         # Sizing and scales.
         self.init_js = js(
             """
@@ -151,6 +154,9 @@ class ScatterPlot(twp.PVWidget):
 
 class PieChart(twp.PVWidget):
     def prepare(self):
+
+        super(PieChart, self).prepare()
+
         # Sizing and scales.
         self.init_js = js(
             """
@@ -191,6 +197,9 @@ class LineChart(twp.PVWidget):
         """, default='linear')
 
     def prepare(self):
+
+        super(LineChart, self).prepare()
+
         # Sizing and scales.
         self.init_js = js(
             """
@@ -234,6 +243,9 @@ class LineChart(twp.PVWidget):
 
 class StackedAreaChart(twp.PVWidget):
     def prepare(self):
+
+        super(StackedAreaChart, self).prepare()
+
         # Sizing and scales.
         self.init_js = js(
             """
@@ -273,6 +285,9 @@ class StackedAreaChart(twp.PVWidget):
 
 class GroupedBarChart(twp.PVWidget):
     def prepare(self):
+
+        super(GroupedBarChart, self).prepare()
+
         # Sizing and scales.
         self.init_js = js(
             """
