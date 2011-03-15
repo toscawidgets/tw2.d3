@@ -55,7 +55,7 @@ class AreaChart(twp.PVWidget):
                 .anchor('top').add(pv.Line).lineWidth(3)
 
 class BarChart(twp.PVWidget):
-    p_labels= twc.Param('list of label strings')
+    p_labels = twc.Param('list of label strings')
     def prepare(self):
         if len(self.p_labels) != len(self.p_data):
            raise ValueError, 'Barchart must have same # of labels and data'
@@ -72,6 +72,8 @@ class BarChart(twp.PVWidget):
                 y = pv.Scale.ordinal(pv.range(data.length)).splitBanded(0, h, 4/5),
                 labels = %s;
             """ % (self.p_data, self.p_width, self.p_height, self.p_labels))
+
+        self.p_left = 9 * max([len(items) for items in self.p_labels])+2
 
         self.setupRootPanel()
 
@@ -104,7 +106,7 @@ class BarChart(twp.PVWidget):
             .strokeStyle("#000")\
           .anchor("bottom").add(pv.Label)\
             .text(js('x.tickFormat'))
-        
+
 class ScatterPlot(twp.PVWidget):
     def prepare(self):
 
@@ -284,7 +286,7 @@ class StackedAreaChart(twp.PVWidget):
             .text(js('y.tickFormat'))
 
 class GroupedBarChart(twp.PVWidget):
-    p_labels= twc.Param('list of label strings')
+    p_labels = twc.Param('list of label strings')
     def prepare(self):
         if len(self.p_labels) != len(self.p_data):
            raise ValueError, 'Barchart must have same # of labels and data'
