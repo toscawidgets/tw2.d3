@@ -325,7 +325,6 @@ class GroupedBarChart(twp.PVWidget):
             .text(js('function(d) d.toFixed(1)'))
 
         # The variable label.
-        print '%s' % self.p_labels
         bar._parent.anchor("left").add(pv.Label) \
             .textAlign("right") \
             .textMargin(5) \
