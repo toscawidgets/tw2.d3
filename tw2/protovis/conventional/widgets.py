@@ -205,7 +205,7 @@ class LineChart(twp.PVWidget):
         maxx = max([max([l['x'] for l in d]) for d in self.p_data])
         miny = min([min([l['y'] for l in d]) for d in self.p_data])
         maxy = max([max([l['y'] for l in d]) for d in self.p_data])
-        print minx, maxx
+        
         # Sizing and scales.
         self.init_js = js(
             """
