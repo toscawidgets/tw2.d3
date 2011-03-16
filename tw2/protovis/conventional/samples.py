@@ -37,8 +37,15 @@ class DemoPieChart(PieChart):
     p_data = [random.random() for i in range(10)]
 
 class DemoLineChart(LineChart):
-    p_data = [{'x': i, 'y' : math.sin(i) + random.random() + 1.5}
-                for i in map(lambda x : x / 5.0, range(50))]
+    p_data = [
+        [
+            {
+                'x': i,
+                'y' : math.sin((i) + random.random()) +
+                (j/12.0)*random.random() + 1.5 + (j/6.0)
+            } for i in map(lambda x : x / 5.0, range(50))
+        ] for j in range(6)
+    ]
 
 class DemoStackedAreaChart(StackedAreaChart):
     p_data = [

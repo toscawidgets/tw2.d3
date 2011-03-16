@@ -201,16 +201,21 @@ class LineChart(twp.PVWidget):
     def prepare(self):
 
         super(LineChart, self).prepare()
-
+        minx = min([min([l['x'] for l in d]) for d in self.p_data])
+        maxx = max([max([l['x'] for l in d]) for d in self.p_data])
+        miny = min([min([l['y'] for l in d]) for d in self.p_data])
+        maxy = max([max([l['y'] for l in d]) for d in self.p_data])
+        print minx, maxx
         # Sizing and scales.
         self.init_js = js(
             """
             var data = %s,
                 w = %i,
                 h = %i,
-                x = pv.Scale.linear(data, function(d) d.x).range(0, w),
-                y = pv.Scale.linear(0, 4).range(0, h);
-            """ % (self.p_data, self.p_width, self.p_height))
+                x = pv.Scale.linear(%f, %f).range(0, w),
+                y = pv.Scale.linear(%f-1.0, %f+1.0).range(0, h);
+            """ % (self.p_data, self.p_width, self.p_height,
+                   minx, maxx, miny, maxy ))
 
         self.setupRootPanel()
 
@@ -235,13 +240,14 @@ class LineChart(twp.PVWidget):
           .anchor("left").add(pv.Label) \
             .text(js('y.tickFormat'))
 
-        # The line.
-        self.add(pv.Line) \
-            .data(js('data')) \
-            .interpolate(self.p_interpolate) \
-            .left(js('function(d) x(d.x)')) \
-            .bottom(js('function(d) y(d.y)')) \
-            .lineWidth(3)
+        # The lines.
+        for i in range(len(self.p_data)):
+            self.add(pv.Line) \
+                .data(js('data[%i]' % i)) \
+                .interpolate(self.p_interpolate) \
+                .left(js('function(d) x(d.x)')) \
+                .bottom(js('function(d) y(d.y)')) \
+                .lineWidth(3)
 
 class StackedAreaChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings', default=[])
