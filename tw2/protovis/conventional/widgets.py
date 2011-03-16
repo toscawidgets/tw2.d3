@@ -198,6 +198,8 @@ class LineChart(twp.PVWidget):
         splines, specify "cardinal"; see also #tension.
         """, default='linear')
 
+    p_line_width = twc.Param("Floating point. ", default=1.75)
+
     def prepare(self):
 
         super(LineChart, self).prepare()
@@ -247,7 +249,7 @@ class LineChart(twp.PVWidget):
                 .interpolate(self.p_interpolate) \
                 .left(js('function(d) x(d.x)')) \
                 .bottom(js('function(d) y(d.y)')) \
-                .lineWidth(3)
+                .lineWidth(self.p_line_width)
 
 class StackedAreaChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings', default=[])
