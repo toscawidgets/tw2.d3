@@ -200,7 +200,7 @@ class LineChart(twp.PVWidget):
 
     p_line_width = twc.Param("Floating point. ", default=1.75)
 
-    p_labels = twc.Param("List of labels.", default=[])
+    p_labels = twc.Param('list of label strings')
 
     def prepare(self):
         if self.p_labels and len(self.p_labels) != len(self.p_data):
@@ -281,7 +281,7 @@ class LineChart(twp.PVWidget):
 
 
 class StackedAreaChart(twp.PVWidget):
-    p_labels = twc.Param('list of label strings', default=[])
+    p_labels = twc.Param('list of label strings')
 
     def prepare(self):
         if self.p_labels and len(self.p_labels) != len(self.p_data):
