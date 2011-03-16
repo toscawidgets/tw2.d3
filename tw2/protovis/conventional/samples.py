@@ -42,10 +42,11 @@ class DemoLineChart(LineChart):
             {
                 'x': i,
                 'y' : math.sin((i) + random.random()) +
-                (j/12.0)*random.random() + 1.5 + (j/6.0)
+                (j/12.0)*random.random() + (j/3.0) + 0.5
             } for i in map(lambda x : x / 5.0, range(50))
         ] for j in range(6)
     ]
+    p_labels = ["billy", "bobby", "sally", "suzie", "balthazar", "quetzalcoatl"]
 
 class DemoStackedAreaChart(StackedAreaChart):
     p_data = [

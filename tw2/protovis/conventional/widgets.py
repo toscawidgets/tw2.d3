@@ -200,9 +200,18 @@ class LineChart(twp.PVWidget):
 
     p_line_width = twc.Param("Floating point. ", default=1.75)
 
+    p_labels = twc.Param("List of labels.", default=[])
+
     def prepare(self):
+        if self.p_labels and len(self.p_labels) != len(self.p_data):
+           raise ValueError, \
+                   "%s must have same # labels(%i) and data(%i)" % (
+                       type(self).__name__,
+                       len(self.p_labels),
+                       len(self.p_data))
 
         super(LineChart, self).prepare()
+
         minx = min([min([l['x'] for l in d]) for d in self.p_data])
         maxx = max([max([l['x'] for l in d]) for d in self.p_data])
         miny = min([min([l['y'] for l in d]) for d in self.p_data])
@@ -215,9 +224,10 @@ class LineChart(twp.PVWidget):
                 w = %i,
                 h = %i,
                 x = pv.Scale.linear(%f, %f).range(0, w),
-                y = pv.Scale.linear(%f-1.0, %f+1.0).range(0, h);
+                y = pv.Scale.linear(%f-1.0, %f+1.0).range(0, h),
+                labels = %s;
             """ % (self.p_data, self.p_width, self.p_height,
-                   minx, maxx, miny, maxy ))
+                   minx, maxx, miny, maxy, self.p_labels ))
 
         self.setupRootPanel()
 
@@ -251,6 +261,24 @@ class LineChart(twp.PVWidget):
                 .bottom(js('function(d) y(d.y)')) \
                 .strokeStyle(js('pv.Colors.category20().range()[%i]' % i)) \
                 .lineWidth(self.p_line_width)
+
+        if self.p_labels:
+            # A legend entry for each person.
+            self.add(pv.Bar) \
+              .data(js('data')) \
+              .top(5).left(5) \
+              .width(max(map(len, self.p_labels)) * 8 + 5) \
+              .height(len(self.p_labels) * 12) \
+              .fillStyle('white').strokeStyle('black').lineWidth(0.4) \
+            .add(pv.Dot) \
+              .left(10) \
+              .top(js('function() this.index * 12 + 10')) \
+              .fillStyle(js('pv.Colors.category20().by(pv.index)')) \
+              .strokeStyle(None) \
+            .anchor("right").add(pv.Label) \
+              .text(js('function() labels[this.index]'))
+
+
 
 class StackedAreaChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings', default=[])
@@ -318,6 +346,7 @@ class StackedAreaChart(twp.PVWidget):
               .strokeStyle(None) \
             .anchor("right").add(pv.Label) \
               .text(js('function() labels[this.index]'))
+
 
 class GroupedBarChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings')
