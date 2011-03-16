@@ -249,6 +249,7 @@ class LineChart(twp.PVWidget):
                 .interpolate(self.p_interpolate) \
                 .left(js('function(d) x(d.x)')) \
                 .bottom(js('function(d) y(d.y)')) \
+                .strokeStyle(js('pv.Colors.category20().range()[%i]' % i)) \
                 .lineWidth(self.p_line_width)
 
 class StackedAreaChart(twp.PVWidget):
