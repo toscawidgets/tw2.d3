@@ -47,6 +47,7 @@ class DemoLineChart(LineChart):
         ] for j in range(6)
     ]
     p_labels = ["billy", "bobby", "sally", "suzie", "balthazar", "quetzalcoatl"]
+    p_interpolate = 'basis'
 
 class DemoStackedAreaChart(StackedAreaChart):
     p_data = [
