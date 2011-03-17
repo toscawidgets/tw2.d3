@@ -58,7 +58,11 @@ class BarChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings')
     def prepare(self):
         if len(self.p_labels) != len(self.p_data):
-           raise ValueError, 'Barchart must have same # of labels and data'
+           raise ValueError, \
+                   "%s must have same # labels(%i) and data(%i)" % (
+                       type(self).__name__,
+                       len(self.p_labels),
+                       len(self.p_data))
 
         super(BarChart, self).prepare()
 
@@ -352,7 +356,11 @@ class GroupedBarChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings')
     def prepare(self):
         if len(self.p_labels) != len(self.p_data):
-           raise ValueError, 'Barchart must have same # of labels and data'
+           raise ValueError, \
+                   "%s must have same # labels(%i) and data(%i)" % (
+                       type(self).__name__,
+                       len(self.p_labels),
+                       len(self.p_data))
 
         super(GroupedBarChart, self).prepare()
 
