@@ -56,6 +56,8 @@ class AreaChart(twp.PVWidget):
 
 class BarChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings')
+    p_show_values = twc.Param('bool -- show values on bars', default=True)
+
     def prepare(self):
         if len(self.p_labels) != len(self.p_data):
            raise ValueError, \
@@ -88,10 +90,11 @@ class BarChart(twp.PVWidget):
                 .left(0)\
                 .width(js('x'))
 
-        # The value label.
-        bar.anchor("right").add(pv.Label)\
-                .textStyle("white")\
-                .text(js('function(d) d.toFixed(1)'))
+        if self.p_show_values:
+            # The value label.
+            bar.anchor("right").add(pv.Label)\
+                    .textStyle("white")\
+                    .text(js('function(d) d.toFixed(1)'))
 
         # The variable label.
         bar.anchor("left").add(pv.Label)\
@@ -354,6 +357,8 @@ class StackedAreaChart(twp.PVWidget):
 
 class GroupedBarChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings')
+    p_show_values = twc.Param('bool -- show values on bars', default=True)
+
     def prepare(self):
         if len(self.p_labels) != len(self.p_data):
            raise ValueError, \
@@ -394,10 +399,11 @@ class GroupedBarChart(twp.PVWidget):
             .width(js('x')) \
             .fillStyle(js('pv.Colors.category20().by(pv.index)'))
 
-        # The value label.
-        bar.anchor("right").add(pv.Label) \
-            .textStyle("white") \
-            .text(js('function(d) d.toFixed(1)'))
+        if self.p_show_values:
+            # The value label.
+            bar.anchor("right").add(pv.Label) \
+                .textStyle("white") \
+                .text(js('function(d) d.toFixed(1)'))
 
         # The variable label.
         bar._parent.anchor("left").add(pv.Label) \
