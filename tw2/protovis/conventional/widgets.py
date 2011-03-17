@@ -21,7 +21,7 @@ class AreaChart(twp.PVWidget):
             var data = %s,
                 w = %i,
                 h = %i,
-                x = pv.Scale.linear(data, function(d) d.x).range(0, w),
+                x = pv.Scale.linear(data, function(d) { return d.x; }).range(0, w),
                 y = pv.Scale.linear(0, 4).range(0, h);
             """ % (self.p_data, self.p_width, self.p_height))
 
@@ -49,8 +49,8 @@ class AreaChart(twp.PVWidget):
         self.add(pv.Area) \
                 .data(js('data')) \
                 .bottom(1) \
-                .left(js('function(d) x(d.x)')) \
-                .height(js('function(d) y(d.y)')) \
+                .left(js('function(d) { return x(d.x) }')) \
+                .height(js('function(d) { return y(d.y) }')) \
                 .fillStyle(self.p_color) \
                 .anchor('top').add(pv.Line).lineWidth(3)
 
@@ -85,7 +85,7 @@ class BarChart(twp.PVWidget):
 
         # The bars.
         bar = self.add(pv.Bar).data(self.p_data)\
-                .top(js('function() y(this.index)'))\
+                .top(js('function() { y(this.index) }'))\
                 .height(js('y.range().band'))\
                 .left(0)\
                 .width(js('x'))
@@ -94,19 +94,19 @@ class BarChart(twp.PVWidget):
             # The value label.
             bar.anchor("right").add(pv.Label)\
                     .textStyle("white")\
-                    .text(js('function(d) d.toFixed(1)'))
+                    .text(js('function(d) { d.toFixed(1) }'))
 
         # The variable label.
         bar.anchor("left").add(pv.Label)\
             .textMargin(5)\
             .textAlign("right")\
-            .text(js('function() labels[this.index]'))
+            .text(js('function() { labels[this.index] }'))
 
         # X-axis ticks.
         self.add(pv.Rule)\
             .data(js('x.ticks(5)'))\
             .left(js('x'))\
-            .strokeStyle(js('function(d) d ? "rgba(255,255,255,.3)" : "#000"'))\
+            .strokeStyle(js('function(d) { d ? "rgba(255,255,255,.3)" : "#000" }'))\
           .add(pv.Rule)\
             .bottom(0)\
             .height(5)\
@@ -136,30 +136,30 @@ class ScatterPlot(twp.PVWidget):
         self.add(pv.Rule) \
             .data(js('y.ticks()')) \
             .bottom(js('y')) \
-            .strokeStyle(js('function(d) d ? "#eee" : "#000"')) \
+            .strokeStyle(js('function(d) { d ? "#eee" : "#000" }')) \
           .anchor("left").add(pv.Label) \
-            .visible(js('function(d) d > 0 && d < 1')) \
+            .visible(js('function(d) { d > 0 && d < 1 }')) \
             .text(js('y.tickFormat'))
 
         # X-axis and ticks.
         self.add(pv.Rule) \
             .data(js('x.ticks()')) \
             .left(js('x')) \
-            .strokeStyle(js('function(d) d ? "#eee" : "#000"')) \
+            .strokeStyle(js('function(d) { d ? "#eee" : "#000" }')) \
           .anchor("bottom").add(pv.Label) \
-            .visible(js('function(d) d > 0 && d < 100')) \
+            .visible(js('function(d) { d > 0 && d < 100 }')) \
             .text(js('x.tickFormat'))
 
         # The dot plot!
         self.add(pv.Panel) \
             .data(js('data')) \
           .add(pv.Dot) \
-            .left(js('function(d) x(d.x)')) \
-            .bottom(js('function(d) y(d.y)')) \
-            .strokeStyle(js('function(d) c(d.z)'))  \
-            .fillStyle(js('function() this.strokeStyle().alpha(.2)'))  \
-            .size(js('function(d) d.z')) \
-            .title(js('function(d) d.z.toFixed(1)'))
+            .left(js('function(d) { x(d.x) }')) \
+            .bottom(js('function(d) { y(d.y) }')) \
+            .strokeStyle(js('function(d) { c(d.z) }'))  \
+            .fillStyle(js('function() { this.strokeStyle().alpha(.2) }'))  \
+            .size(js('function(d) { d.z }')) \
+            .title(js('function(d) { d.z.toFixed(1) }'))
 
 class PieChart(twp.PVWidget):
     def prepare(self):
@@ -186,12 +186,12 @@ class PieChart(twp.PVWidget):
             .innerRadius(js('r - 40')) \
             .outerRadius(js('r')) \
             .angle(js('a')) \
-            .event("mouseover", js('function() this.innerRadius(0)')) \
-            .event("mouseout", js('function() this.innerRadius(r - 40)')) \
+            .event("mouseover", js('function() { this.innerRadius(0) }')) \
+            .event("mouseout", js('function() { this.innerRadius(r - 40) }')) \
           .anchor("center").add(pv.Label) \
-            .visible(js('function(d) d > .15')) \
+            .visible(js('function(d) { d > .15 }')) \
             .textAngle(0) \
-            .text(js('function(d) d.toFixed(2)'))
+            .text(js('function(d) { d.toFixed(2) }'))
 
 class LineChart(twp.PVWidget):
     p_interpolate = twc.Param(
@@ -241,7 +241,7 @@ class LineChart(twp.PVWidget):
         # X-axis ticks.
         self.add(pv.Rule) \
             .data(js('x.ticks()')) \
-            .visible(js('function(d) d > 0')) \
+            .visible(js('function(d) { d > 0 }')) \
             .left(js('x')) \
             .strokeStyle("#eee") \
           .add(pv.Rule) \
@@ -255,7 +255,7 @@ class LineChart(twp.PVWidget):
         self.add(pv.Rule) \
             .data(js('y.ticks(5)')) \
             .bottom(js('y')) \
-            .strokeStyle(js('function(d) d ? "#eee" : "#000"')) \
+            .strokeStyle(js('function(d) { d ? "#eee" : "#000" }')) \
           .anchor("left").add(pv.Label) \
             .text(js('y.tickFormat'))
 
@@ -264,8 +264,8 @@ class LineChart(twp.PVWidget):
             self.add(pv.Line) \
                 .data(js('data[%i]' % i)) \
                 .interpolate(self.p_interpolate) \
-                .left(js('function(d) x(d.x)')) \
-                .bottom(js('function(d) y(d.y)')) \
+                .left(js('function(d) { x(d.x) }')) \
+                .bottom(js('function(d) { y(d.y) }')) \
                 .strokeStyle(js('pv.Colors.category20().range()[%i]' % i)) \
                 .lineWidth(self.p_line_width)
 
@@ -279,12 +279,11 @@ class LineChart(twp.PVWidget):
               .fillStyle('white').strokeStyle('black').lineWidth(0.4) \
             .add(pv.Dot) \
               .left(10) \
-              .top(js('function() this.index * 12 + 10')) \
+              .top(js('function() { this.index * 12 + 10 }')) \
               .fillStyle(js('pv.Colors.category20().by(pv.index)')) \
               .strokeStyle(None) \
             .anchor("right").add(pv.Label) \
-              .text(js('function() labels[this.index]'))
-
+              .text(js('function() { labels[this.index] }'))
 
 
 class StackedAreaChart(twp.PVWidget):
@@ -316,7 +315,7 @@ class StackedAreaChart(twp.PVWidget):
         # X-axis and ticks.
         self.add(pv.Rule) \
             .data(js('x.ticks()')) \
-            .visible(js('function(d) d')) \
+            .visible(js('function(d) { d }')) \
             .left(js('x')) \
             .bottom(-5) \
             .height(5) \
@@ -326,15 +325,15 @@ class StackedAreaChart(twp.PVWidget):
         # The stack layout.
         self.add(pv.Layout.Stack) \
             .layers(js('data')) \
-            .x(js('function(d) x(d.x)')) \
-            .y(js('function(d) y(d.y)')) \
+            .x(js('function(d) { x(d.x) }')) \
+            .y(js('function(d) { y(d.y) }')) \
           .layer.add(pv.Area)
 
         # Y-axis and ticks.
         self.add(pv.Rule) \
             .data(js('y.ticks(3)')) \
             .bottom(js('y')) \
-            .strokeStyle(js('function(d) d ? "rgba(128,128,128,.2)" : "#000"'))\
+            .strokeStyle(js('function(d) { d ? "rgba(128,128,128,.2)" : "#000" }'))\
           .anchor("left").add(pv.Label) \
             .text(js('y.tickFormat'))
 
@@ -348,11 +347,11 @@ class StackedAreaChart(twp.PVWidget):
               .fillStyle('white').strokeStyle('black').lineWidth(0.4) \
             .add(pv.Dot) \
               .left(10) \
-              .top(js('function() this.index * 12 + 10')) \
+              .top(js('function() { this.index * 12 + 10 }')) \
               .fillStyle(js('pv.Colors.category20().by(pv.index)')) \
               .strokeStyle(None) \
             .anchor("right").add(pv.Label) \
-              .text(js('function() labels[this.index]'))
+              .text(js('function() { labels[this.index] }'))
 
 
 class GroupedBarChart(twp.PVWidget):
@@ -389,11 +388,11 @@ class GroupedBarChart(twp.PVWidget):
         # The bars.
         bar = self.add(pv.Panel) \
             .data(js('data')) \
-            .top(js('function() y(this.index)')) \
+            .top(js('function() { return y(this.index); }')) \
             .height(js('y.range().band')) \
           .add(pv.Bar) \
-            .data(js('function(d) d')) \
-            .top(js('function() this.index * y.range().band / m')) \
+            .data(js('function(d) { d }')) \
+            .top(js('function() { this.index * y.range().band / m }')) \
             .height(js('y.range().band / m')) \
             .left(0) \
             .width(js('x')) \
@@ -403,19 +402,19 @@ class GroupedBarChart(twp.PVWidget):
             # The value label.
             bar.anchor("right").add(pv.Label) \
                 .textStyle("white") \
-                .text(js('function(d) d.toFixed(1)'))
+                .text(js('function(d) { d.toFixed(1) }'))
 
         # The variable label.
         bar._parent.anchor("left").add(pv.Label) \
             .textAlign("right") \
             .textMargin(5) \
-            .text(js("function() labels[this.parent.index]"))
+            .text(js("function() { labels[this.parent.index] }"))
 
         # X-axis ticks.
         self.add(pv.Rule) \
             .data(js('x.ticks(5)')) \
             .left(js('x')) \
-            .strokeStyle(js('function(d) d ? "rgba(255,255,255,.3)" : "#000"'))\
+            .strokeStyle(js('function(d) { d ? "rgba(255,255,255,.3)" : "#000" }'))\
           .add(pv.Rule) \
             .bottom(0) \
             .height(5) \
