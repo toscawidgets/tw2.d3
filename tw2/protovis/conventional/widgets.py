@@ -209,6 +209,9 @@ class LineChart(twp.PVWidget):
 
     p_labels = twc.Param('list of label strings')
 
+    p_time_series = twc.Param('Convert from "seconds since the epoch"?',
+                              default=False)
+
     def prepare(self):
         if self.p_labels and len(self.p_labels) != len(self.p_data):
            raise ValueError, \
@@ -227,14 +230,27 @@ class LineChart(twp.PVWidget):
         # Sizing and scales.
         self.init_js = js(
             """
-            var data = %s,
-                w = %i,
+            var data = %s;
+
+            var time_series = "%s".toLowerCase() == "true"
+            if ( time_series ) {
+                data.forEach(function(series){
+                    series.forEach(function(datum){
+                        var t = new Date();
+                        t.setTime(datum.x);
+                        datum.x = t
+                    });
+                });
+            }
+
+            var w = %i,
                 h = %i,
-                x = pv.Scale.linear(%f, %f).range(0, w),
-                y = pv.Scale.linear(%f-1.0, %f+1.0).range(0, h),
+                x = pv.Scale.linear(data[0], function(d) { return d.x }).range(0, w),
+                y = pv.Scale.linear(%f-0.25, %f+0.25).range(0, h),
                 labels = %s;
-            """ % (self.p_data, self.p_width, self.p_height,
-                   minx, maxx, miny, maxy, self.p_labels ))
+
+            """ % (self.p_data, self.p_time_series, self.p_width, self.p_height,
+                   miny, maxy, self.p_labels ))
 
         self.setupRootPanel()
 
