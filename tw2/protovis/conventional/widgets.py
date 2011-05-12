@@ -314,6 +314,13 @@ class LineChart(twp.PVWidget):
 
 class StackedAreaChart(twp.PVWidget):
     p_labels = twc.Param('list of label strings')
+    p_time_series = twc.Param('Convert from "seconds since the epoch"?',
+                              default=False)
+    p_time_series_format = twc.Param(
+        """strftime-type format for time strings.
+
+        See http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Format.date.html
+        """, default="%T")
 
     def prepare(self):
         if self.p_labels and len(self.p_labels) != len(self.p_data):
@@ -328,16 +335,36 @@ class StackedAreaChart(twp.PVWidget):
         # Sizing and scales.
         self.init_js = js(
             """
-            var data = %s,
-                w = %i,
+            var data = %s;
+
+            var time_series = "%s".toLowerCase() == "true";
+            var time_series_format = "%s";
+            var formatter = pv.Format.date(time_series_format);
+            if ( time_series ) {
+                data.forEach(function(series){
+                    series.forEach(function(datum){
+                        var t = new Date();
+                        t.setTime(datum.x);
+                        datum.x = t;
+                    });
+                });
+            }
+
+            var w = %i,
                 h = %i,
-                x = pv.Scale.linear(0, 9.9).range(0, w),
-                y = pv.Scale.linear(0, 14).range(0, h),
+                x = pv.Scale.linear(data[0], function(d) { return d.x }).range(0, w),
+                y = pv.Scale.linear(0, %i).range(0, h),
                 labels = %s;
-            """ % (self.p_data, self.p_width, self.p_height, self.p_labels))
-        
+            """ % (simplejson.dumps(list(self.p_data)),
+                   self.p_time_series, self.p_time_series_format,
+                   self.p_width, self.p_height,
+                   sum([max([d['y'] for d in series])
+                        for series in self.p_data])+1,
+                   self.p_labels,
+                  ))
+
         self.setupRootPanel()
-        
+
         # X-axis and ticks.
         self.add(pv.Rule) \
             .data(js('x.ticks()')) \
@@ -346,7 +373,7 @@ class StackedAreaChart(twp.PVWidget):
             .bottom(-5) \
             .height(5) \
           .anchor("bottom").add(pv.Label) \
-            .text(js('x.tickFormat'))
+            .text(js('formatter'))
 
         # The stack layout.
         self.add(pv.Layout.Stack) \

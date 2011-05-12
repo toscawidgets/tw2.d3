@@ -7,7 +7,7 @@ f.close()
 
 setup(
     name='tw2.protovis.conventional',
-    version='0.1.a8',
+    version='0.1.a9',
     description='toscawidgets2 wrapper for the stanford protovis toolkit',
     long_description=long_description,
     author='Ralph Bean',

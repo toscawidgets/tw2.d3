@@ -38,52 +38,78 @@ class DemoPieChart(PieChart):
     p_data = [random.random() for i in range(10)]
 
 
-class AutoRefreshingData(object):
-    """ Helper class for DemoLineChart.  Refreshes its data dynamically. """
-    def __iter__(self):
-        n = 20.0
-        T_scale = 1000.0
-        now = int(time.time())
-        tspan = range(now-100, now)
-        funcs = [
-            lambda t : math.sin(t/n),
-            lambda t : abs(math.sin(t/n))**((t%(2*n))/n),
-            lambda t : math.cos(t/(n+1))*1.5,
-        ]
-        funcs.append(
-            lambda t : funcs[1](t) * funcs[2](t)
-        )
-
-        for i in range(len(funcs)):
-            yield [ { 'x': t*1000.0, 'y' : funcs[i](float(t)) } for t in tspan ]
-
-    def __repr__(self):
-        print "repr"
-        return str(self)
-
-    def __str__(self):
-        return str([ele for ele in self])
-
-    def __len__(self):
-        return 4
 
 class DemoLineChart(LineChart):
+    class AutoRefreshingData(object):
+        """ Helper class for DemoLineChart.  Refreshes its data dynamically. """
+        def __iter__(self):
+            n = 20.0
+            T_scale = 1000.0
+            now = int(time.time())
+            tspan = range(now-100, now)
+            funcs = [
+                lambda t : math.sin(t/n),
+                lambda t : abs(math.sin(t/n))**((t%(2*n))/n),
+                lambda t : math.cos(t/(n+1))*1.5,
+            ]
+            funcs.append(
+                lambda t : funcs[1](t) * funcs[2](t)
+            )
+
+            for i in range(len(funcs)):
+                yield [ { 'x': t*1000.0, 'y' : funcs[i](float(t)) }
+                       for t in tspan ]
+
+        def __repr__(self):
+            print "repr"
+            return str(self)
+
+        def __str__(self):
+            return str([ele for ele in self])
+
+        def __len__(self):
+            return 4
+
     p_data = AutoRefreshingData()
     p_labels = ["billy", "bobby", "sally", "suzie"]
     p_time_series = True
     p_time_series_format = "%I:%M:%S"
 
 class DemoStackedAreaChart(StackedAreaChart):
-    p_data = [
-        [
-            {
-                'series' : i,
-                'x': j / 10.0,
-                'y' : math.sin(j/10.0) + random.random() * .5  + 2
-            } for j in range(100)
-        ] for i in range(5)
-    ]
-    p_labels = ["billy", "bobby", "sally", "suzie", "balthazar"]
+    class AutoRefreshingData(object):
+        """ Helper class for DemoLineChart.  Refreshes its data dynamically. """
+        def __iter__(self):
+            n = 20.0
+            T_scale = 1000.0
+            now = int(time.time())
+            tspan = range(now-100, now)
+            funcs = [
+                lambda t : math.sin(t/n),
+                lambda t : abs(math.sin(t/n))**((t%(2*n))/n),
+                lambda t : math.cos(t/(n+1))*1.5,
+            ]
+            funcs.append(
+                lambda t : funcs[1](t) * funcs[2](t)
+            )
+
+            for i in range(len(funcs)):
+                yield [ { 'x': t*1000.0, 'y' : abs(funcs[i](float(t))) }
+                       for t in tspan ]
+
+        def __repr__(self):
+            print "repr"
+            return str(self)
+
+        def __str__(self):
+            return str([ele for ele in self])
+
+        def __len__(self):
+            return 4
+
+    p_data = AutoRefreshingData()
+    p_labels = ["billy", "bobby", "sally", "suzie"]
+    p_time_series = True
+    p_time_series_format = "%I:%M:%S"
 
 class DemoGroupedBarChart(GroupedBarChart):
     p_data = [
