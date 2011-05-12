@@ -7,6 +7,16 @@ import tw2.protovis.core as twp
 from tw2.protovis.core import pv
 import simplejson
 
+def max_stacked_value(data):
+    if len(data) == 0:
+        return 0
+    series_i = range(len(data))
+    # Assume (bad assumption) that each series is the same length.
+    value = max([sum([data[i][j]['y'] for i in series_i])
+                for j in range(len(data[0]))])
+    print value
+    return value
+
 class js(twc.JSSymbol):
     def __init__(self, src):
         super(js, self).__init__(src=src)
@@ -353,13 +363,12 @@ class StackedAreaChart(twp.PVWidget):
             var w = %i,
                 h = %i,
                 x = pv.Scale.linear(data[0], function(d) { return d.x }).range(0, w),
-                y = pv.Scale.linear(0, %i).range(0, h),
+                y = pv.Scale.linear(0, %f).range(0, h),
                 labels = %s;
             """ % (simplejson.dumps(list(self.p_data)),
                    self.p_time_series, self.p_time_series_format,
                    self.p_width, self.p_height,
-                   sum([max([d['y'] for d in series])
-                        for series in self.p_data])+1,
+                   max_stacked_value(list(self.p_data)),
                    self.p_labels,
                   ))
 
