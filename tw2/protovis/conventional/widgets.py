@@ -5,6 +5,7 @@ TODO
 import tw2.core as twc
 import tw2.protovis.core as twp
 from tw2.protovis.core import pv
+import simplejson
 
 class js(twc.JSSymbol):
     def __init__(self, src):
@@ -256,7 +257,8 @@ class LineChart(twp.PVWidget):
                 y = pv.Scale.linear(%f-0.25, %f+0.25).range(0, h),
                 labels = %s;
 
-            """ % (self.p_data, self.p_time_series, self.p_time_series_format,
+            """ % (simplejson.dumps(list(self.p_data)),
+                   self.p_time_series, self.p_time_series_format,
                    self.p_width, self.p_height,
                    miny, maxy, self.p_labels ))
 
