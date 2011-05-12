@@ -211,6 +211,11 @@ class LineChart(twp.PVWidget):
 
     p_time_series = twc.Param('Convert from "seconds since the epoch"?',
                               default=False)
+    p_time_series_format = twc.Param(
+        """strftime-type format for time strings.
+
+        See http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Format.date.html
+        """, default="%T")
 
     def prepare(self):
         if self.p_labels and len(self.p_labels) != len(self.p_data):
@@ -232,13 +237,15 @@ class LineChart(twp.PVWidget):
             """
             var data = %s;
 
-            var time_series = "%s".toLowerCase() == "true"
+            var time_series = "%s".toLowerCase() == "true";
+            var time_series_format = "%s";
+            var formatter = pv.Format.date(time_series_format);
             if ( time_series ) {
                 data.forEach(function(series){
                     series.forEach(function(datum){
                         var t = new Date();
                         t.setTime(datum.x);
-                        datum.x = t
+                        datum.x = t;
                     });
                 });
             }
@@ -249,7 +256,8 @@ class LineChart(twp.PVWidget):
                 y = pv.Scale.linear(%f-0.25, %f+0.25).range(0, h),
                 labels = %s;
 
-            """ % (self.p_data, self.p_time_series, self.p_width, self.p_height,
+            """ % (self.p_data, self.p_time_series, self.p_time_series_format,
+                   self.p_width, self.p_height,
                    miny, maxy, self.p_labels ))
 
         self.setupRootPanel()
@@ -265,7 +273,7 @@ class LineChart(twp.PVWidget):
             .height(5) \
             .strokeStyle("#000") \
           .anchor("bottom").add(pv.Label) \
-            .text(js('x.tickFormat'))
+            .text(js('formatter'))
 
         # Y-axis ticks.
         self.add(pv.Rule) \

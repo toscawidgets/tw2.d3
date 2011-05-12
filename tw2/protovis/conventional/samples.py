@@ -71,6 +71,7 @@ class DemoLineChart(LineChart):
     p_data = AutoRefreshingData()
     p_labels = ["billy", "bobby", "sally", "suzie"]
     p_time_series = True
+    p_time_series_format = "%I:%M:%S"
 
 class DemoStackedAreaChart(StackedAreaChart):
     p_data = [
