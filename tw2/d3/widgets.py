@@ -6,7 +6,7 @@ import simplejson
 import uuid
 
 import tw2.core as twc
-import tw2.jqplugins.ui as twui
+import tw2.jquery as twj
 
 modname = '.'.join(__name__.split('.')[:-1])
 
@@ -15,9 +15,9 @@ d3_js = twc.JSLink(
     filename='static/js/2.8.0/d3.v2.js',
 )
 
-class D3Widget(twui.base.JQueryUIWidget):
+class D3Widget(twc.Widget):
     template = "mako:tw2.d3.templates.d3"
-    resources = twui.base.JQueryUIWidget.resources + [d3_js]
+    resources = [twj.jquery_js, d3_js]
 
 class BarChart(D3Widget):
     resources = D3Widget.resources + [
@@ -46,7 +46,7 @@ class BarChart(D3Widget):
         json = [{'key': k, 'value': v} for k, v in self.data.iteritems()]
 
         self.add_call(twc.js_function('tw2.d3.bar')(
-            self.selector,
+            self.attrs['id'],
             json,
             self.width,
             self.height,
