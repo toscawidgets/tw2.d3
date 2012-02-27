@@ -28,6 +28,8 @@ class BarChart(D3Widget):
     data = twc.Param("An OrderedDict of key-value pairs", default=None)
     width = twc.Param("Width of the chart in pixels.", default=960)
     height = twc.Param("Height of the chart in pixels.", default=930)
+    padding = twc.Param("A list of ints [top, right, bottom, left]",
+                        default=[30, 10, 10, 30])
 
     def prepare(self):
 
@@ -46,5 +48,6 @@ class BarChart(D3Widget):
             json,
             self.width,
             self.height,
+            self.padding,
         ))
 

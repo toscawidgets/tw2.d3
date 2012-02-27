@@ -22,6 +22,8 @@ class DemoBarChart(BarChart):
     width = 450
     height = 120
 
+    padding = [30, 10, 10, 80]
+
     data = collections.OrderedDict(
         oranges=42,
         apples=21,

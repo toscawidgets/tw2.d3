@@ -3,10 +3,9 @@ if ( typeof tw2 == "undefined" ) tw2 = {};
 if ( typeof tw2.d3 == "undefined" ) tw2.d3 = {};
 
 $.extend(tw2.d3, {
-    bar: function (selector, data, width, height) {
-        var m = [30, 10, 10, 30],
-        w = width - m[1] - m[3],
-        h = height - m[0] - m[2];
+    bar: function (selector, data, width, height, padding) {
+        var w = width - padding[1] - padding[3];
+        var h = height - padding[0] - padding[2];
 
         var format = d3.format(",.0f");
 
@@ -17,12 +16,11 @@ $.extend(tw2.d3, {
         yAxis = d3.svg.axis().scale(y).orient("left").tickSize(0);
 
         $(document).ready(function() {
-            console.log(m[3]);
             var svg = d3.select("#" + selector).append("svg")
-            .attr("width", w + m[1] + m[3])
-            .attr("height", h + m[0] + m[2])
+            .attr("width", w + padding[1] + padding[3])
+            .attr("height", h + padding[0] + padding[2])
             .append("g")
-            .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+            .attr("transform", "translate(" + padding[3] + "," + padding[0] + ")");
 
             // Parse numbers
             $.each(data, function(i, d) { d.value = +d.value; });
@@ -55,6 +53,10 @@ $.extend(tw2.d3, {
             svg.append("g")
             .attr("class", "x axis")
             .call(xAxis);
+
+            svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis);
         });
     }
 });
