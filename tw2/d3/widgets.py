@@ -35,6 +35,15 @@ class BarChart(D3Widget):
 
     def prepare(self):
 
+        # Check the types of everything
+        int(self.width)
+        int(self.height)
+        str(self.fmtstr)
+        self.padding = [int(ele) for ele in self.padding]
+
+        if self.data == None:
+            raise ValueError("BarChart must be provided a `data` dict")
+
         # Warning.  we're forcibly overriding the user-provided id here.
         # Reason being that d3 doesn't handle edge-case selectors well.
         self.id = self.compound_id = \
