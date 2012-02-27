@@ -19,6 +19,9 @@ except ImportError:
     import ordereddict as collections
 
 class DemoBarChart(BarChart):
+    width = 450
+    height = 120
+
     data = collections.OrderedDict(
         oranges=42,
         apples=21,

@@ -3,10 +3,10 @@ if ( typeof tw2 == "undefined" ) tw2 = {};
 if ( typeof tw2.d3 == "undefined" ) tw2.d3 = {};
 
 $.extend(tw2.d3, {
-    bar: function (selector, data) {
+    bar: function (selector, data, width, height) {
         var m = [30, 10, 10, 30],
-        w = 960 - m[1] - m[3],
-        h = 930 - m[0] - m[2];
+        w = width - m[1] - m[3],
+        h = height - m[0] - m[2];
 
         var format = d3.format(",.0f");
 

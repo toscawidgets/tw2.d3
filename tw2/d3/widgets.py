@@ -26,6 +26,8 @@ class BarChart(D3Widget):
     ]
 
     data = twc.Param("An OrderedDict of key-value pairs", default=None)
+    width = twc.Param("Width of the chart in pixels.", default=960)
+    height = twc.Param("Height of the chart in pixels.", default=930)
 
     def prepare(self):
 
@@ -42,5 +44,7 @@ class BarChart(D3Widget):
         self.add_call(twc.js_function('tw2.d3.bar')(
             self.selector,
             json,
+            self.width,
+            self.height,
         ))
 
