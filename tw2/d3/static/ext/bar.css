@@ -1,24 +1,24 @@
 .bar rect {
-  fill: steelblue;
+    fill: steelblue;
 }
 
 .bar text.value {
-  fill: white;
+    fill: white;
 }
 
 .axis {
-  shape-rendering: crispEdges;
+    shape-rendering: crispEdges;
 }
 
 .axis path {
-  fill: none;
+    fill: none;
 }
 
 .x.axis line {
-  stroke: #fff;
-  stroke-opacity: .8;
+    stroke: #fff;
+    stroke-opacity: .8;
 }
 
 .y.axis path {
-  stroke: black;
+    stroke: black;
 }
