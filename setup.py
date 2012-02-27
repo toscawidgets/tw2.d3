@@ -15,7 +15,8 @@ setup(
     url='',
     install_requires=[
         "tw2.core",
-        ],
+        "tw2.jquery",
+    ],
     packages=find_packages(exclude=['ez_setup']),
     namespace_packages = ['tw2'],
     zip_safe=False,
