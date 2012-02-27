@@ -1,5 +1,6 @@
 
 if ( typeof tw2 == "undefined" ) tw2 = {};
+if ( typeof tw2.store == "undefined" ) tw2.store = {};
 if ( typeof tw2.d3 == "undefined" ) tw2.d3 = {};
 
 $.extend(tw2.d3, {
@@ -57,6 +58,12 @@ $.extend(tw2.d3, {
             svg.append("g")
             .attr("class", "y axis")
             .call(yAxis);
+
+            // Save it off so we can access it later if need be
+            tw2.store[selector] = {
+                svg: svg,
+                data: data,
+            };
         });
     }
 });
