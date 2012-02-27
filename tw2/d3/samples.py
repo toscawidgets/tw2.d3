@@ -12,11 +12,15 @@ from widgets import (
 )
 
 import random
+try:
+    import collections
+except ImportError:
+    # Must not be on python 2.7...
+    import ordereddict as collections
 
 class DemoBarChart(BarChart):
-    data = [
-        {
-            'key': i,
-            'value': random.random(),
-        } for i in range(10)
-    ]
+    data = collections.OrderedDict(
+        oranges=42,
+        apples=21,
+        bananas=63,
+    )

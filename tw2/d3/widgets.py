@@ -25,7 +25,7 @@ class BarChart(D3Widget):
         twc.CSSLink(modname=modname, filename="static/ext/bar.css"),
     ]
 
-    data = twc.Param("A list of {'key': key, 'value': value} dicts", default=None)
+    data = twc.Param("An OrderedDict of key-value pairs", default=None)
 
     def prepare(self):
 
@@ -36,8 +36,11 @@ class BarChart(D3Widget):
 
         super(BarChart, self).prepare()
 
+        # Munge our data so d3 can understand it
+        json = [{'key': k, 'value': v} for k, v in self.data.iteritems()]
+
         self.add_call(twc.js_function('tw2.d3.bar')(
             self.selector,
-            self.data
+            json,
         ))
 
