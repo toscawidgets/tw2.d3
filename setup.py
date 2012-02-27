@@ -23,7 +23,7 @@ setup(
     long_description=long_description,
     author='Ralph Bean',
     author_email='rbean@redhat.com',
-    url='',
+    url='http://github.com/ralphbean/tw2.d3',
     install_requires=[
         "tw2.core",
         "tw2.jquery",
