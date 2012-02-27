@@ -15,9 +15,11 @@ d3_js = twc.JSLink(
     filename='static/js/2.8.0/d3.v2.js',
 )
 
+
 class D3Widget(twc.Widget):
     template = "mako:tw2.d3.templates.d3"
     resources = [twj.jquery_js, d3_js]
+
 
 class BarChart(D3Widget):
     resources = D3Widget.resources + [
@@ -62,4 +64,3 @@ class BarChart(D3Widget):
             self.padding,
             self.fmtstr,
         ))
-

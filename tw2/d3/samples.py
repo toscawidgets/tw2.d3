@@ -18,6 +18,7 @@ except ImportError:
     # Must not be on python 2.7...
     import ordereddict as collections
 
+
 class DemoBarChart(BarChart):
     width = 450
     height = 120
