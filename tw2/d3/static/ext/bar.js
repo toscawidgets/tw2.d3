@@ -3,11 +3,11 @@ if ( typeof tw2 == "undefined" ) tw2 = {};
 if ( typeof tw2.d3 == "undefined" ) tw2.d3 = {};
 
 $.extend(tw2.d3, {
-    bar: function (selector, data, width, height, padding) {
+    bar: function (selector, data, width, height, padding, format) {
         var w = width - padding[1] - padding[3];
         var h = height - padding[0] - padding[2];
 
-        var format = d3.format(",.0f");
+        var format = d3.format(format);
 
         var x = d3.scale.linear().range([0, w]),
         y = d3.scale.ordinal().rangeRoundBands([0, h], .1);

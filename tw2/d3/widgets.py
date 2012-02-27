@@ -30,6 +30,8 @@ class BarChart(D3Widget):
     height = twc.Param("Height of the chart in pixels.", default=930)
     padding = twc.Param("A list of ints [top, right, bottom, left]",
                         default=[30, 10, 10, 30])
+    fmtstr = twc.Param("A format string for numeric values.",
+                       default=",.0f")
 
     def prepare(self):
 
@@ -49,5 +51,6 @@ class BarChart(D3Widget):
             self.width,
             self.height,
             self.padding,
+            self.fmtstr,
         ))
 
