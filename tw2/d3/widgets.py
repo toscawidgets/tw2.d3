@@ -4,6 +4,7 @@ tw2 widgets that make use of `d3 <http://mbostock.github.com/d3/>`_.
 
 import simplejson
 import uuid
+import warnings
 
 import tw2.core as twc
 import tw2.jquery as twj
@@ -19,6 +20,17 @@ d3_js = twc.JSLink(
 class D3Widget(twc.Widget):
     template = "mako:tw2.d3.templates.d3"
     resources = [twj.jquery_js, d3_js]
+
+    def prepare(self):
+        if ':' in self.compound_id:
+            # Warning.  we're forcibly overriding the user-provided id here.
+            # Reason being that d3 doesn't handle edge-case selectors well.
+            new_id = "d3_" + str(uuid.uuid4()).replace('-', '')
+            warnings.warn("'%s' is an illegal d3 id.  Replacing with '%s'." %
+                          (self.compound_id, new_id))
+            self.id = self.compound_id = new_id
+
+        super(D3Widget, self).prepare()
 
 
 class BarChart(D3Widget):
@@ -45,11 +57,6 @@ class BarChart(D3Widget):
 
         if self.data == None:
             raise ValueError("BarChart must be provided a `data` dict")
-
-        # Warning.  we're forcibly overriding the user-provided id here.
-        # Reason being that d3 doesn't handle edge-case selectors well.
-        self.id = self.compound_id = \
-                "d3_" + str(uuid.uuid4()).replace('-', '')
 
         super(BarChart, self).prepare()
 

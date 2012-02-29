@@ -18,7 +18,7 @@ if sys.version_info[0] == 2 and sys.version_info[1] < 7:
 
 setup(
     name='tw2.d3',
-    version='0.0.1',
+    version='0.0.2a1',
     description='toscawidgets2 wrapper for d3 (data-driven documents)',
     long_description=long_description,
     author='Ralph Bean',
