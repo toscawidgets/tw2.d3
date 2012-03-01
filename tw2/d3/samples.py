@@ -27,6 +27,8 @@ class DemoBarChart(BarChart):
 
     data = collections.OrderedDict(
         oranges=42,
+        kiwis=102,
+        grapefruits=54,
         apples=21,
         bananas=63,
     )
