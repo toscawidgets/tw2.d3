@@ -52,13 +52,9 @@ $.extend(tw2.d3, {
             //            .attr("text-anchor", "end")
             //            .text(function(d) { return format(d.value); });
 
-            //            svg.append("g")
-            //            .attr("class", "x axis")
-            //            .call(xAxis);
-            //
-            //            svg.append("g")
-            //            .attr("class", "y axis")
-            //            .call(yAxis);
+            svg.append("g").attr("class", "x axis")
+            svg.append("g").attr("class", "y axis")
+
             setInterval(function() {
                 tw2.store[selector].data[0].value -= 15;
                 tw2.store[selector].data = tw2.d3.filter(tw2.store[selector].data);
@@ -93,6 +89,9 @@ $.extend(tw2.d3, {
                 .attr("height", y.rangeBand())
                 .transition()
                 .attr("width", function(d) { return x(d.value); });
+
+                svg.selectAll("g.x").transition().duration(750).call(xAxis);
+                svg.selectAll("g.y").transition().duration(750).call(yAxis);
 
             }, 1000);
         });
