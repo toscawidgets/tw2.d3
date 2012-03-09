@@ -43,22 +43,13 @@ $.extend(tw2.d3, {
                 data: data,
             };
 
-            //            bar.append("text")
-            //            .attr("class", "value")
-            //            .attr("x", function(d) { return x(d.value); })
-            //            .attr("y", y.rangeBand() / 2)
-            //            .attr("dx", -3)
-            //            .attr("dy", ".35em")
-            //            .attr("text-anchor", "end")
-            //            .text(function(d) { return format(d.value); });
-
             svg.append("g").attr("class", "x axis")
             svg.append("g").attr("class", "y axis")
 
-            setInterval(function() {
+            function redraw() {
                 tw2.store[selector].data[0].value -= 15;
                 tw2.store[selector].data = tw2.d3.filter(tw2.store[selector].data);
-                console.log(tw2.store[selector].data);
+                var data = tw2.store[selector].data;
 
                 var x = d3.scale.linear().range([0, w]);
                 var y = d3.scale.ordinal().rangeRoundBands([0, h], .1);
@@ -71,7 +62,7 @@ $.extend(tw2.d3, {
                 y.domain($.map(data, function(d, i) { return d.key; }));
 
                 var bar = svg.selectAll("g.bar").data(
-                    tw2.store[selector].data,
+                    data,
                     function(d) { return d.key }
                 );
 
@@ -79,21 +70,37 @@ $.extend(tw2.d3, {
                 .attr("class", "bar")
                 .append("rect");
 
+                bar.enter().append("text")
+                .attr("class", "value")
+                .attr("dx", -3)
+                .attr("dy", ".35em")
+                .attr("text-anchor", "end");
+
                 bar.exit().remove();
 
                 bar.transition().duration(750).attr("transform", function(d) {
                     return "translate(0," + y(d.key) + ")";
                 });
 
-                bar.selectAll("rect").data(data, function(d) { return d.key })
+                bar.selectAll("rect")
+                .data(data, function(d) { return d.key })
                 .attr("height", y.rangeBand())
                 .transition()
                 .attr("width", function(d) { return x(d.value); });
 
+                // This is not working yet.
+//                svg.selectAll("text.value")
+//                .data(data)
+//                .attr("y", y.rangeBand() / 2)
+//                .attr("x", function(d) { return x(d.value); })
+//                .text(function(d) { return format(d.value); });
+
                 svg.selectAll("g.x").transition().duration(750).call(xAxis);
                 svg.selectAll("g.y").transition().duration(750).call(yAxis);
 
-            }, 1000);
+            }
+            redraw()
+            setInterval(redraw, 1000);
         });
     }
 });
