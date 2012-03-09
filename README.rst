@@ -18,9 +18,9 @@ Peep the `live demonstration <http://tw2-demos.threebean.org/module?module=tw2.d
 Links
 -----
 
-You can `get the source from github <http://github.com/ralphbean/tw2.d3>`_,
+You can `get the source from github <http://github.com/toscawidgets/tw2.d3>`_,
 check out `the PyPI page <http://pypi.python.org/pypi/tw2.d3>`_, and
-report or look into `bugs <http://github.com/ralphbean/tw2.d3/issues/>`_.
+report or look into `bugs <http://github.com/toscawidgets/tw2.d3/issues/>`_.
 
 Description
 -----------
@@ -39,7 +39,6 @@ interaction.  It is the successor of protovis.
 
 This module, tw2.d3, provides `toscawidgets2 (tw2)`_ widgets that render `d3`_ data visualizations.
 
-
 Sampling tw2.d3 in the WidgetBrowser
 ------------------------------------
 
@@ -47,9 +46,10 @@ The best way to scope out ``tw2.d3`` is to load its widgets in the
 ``tw2.devtools`` WidgetBrowser.  To see the source code that configures them,
 check out ``tw2.d3/tw2/d3/samples.py``
 
-To give it a try you'll need git, mercurial, python, and virtualenv.  Run::
+To give it a try you'll need git, python, and `virtualenvwrapper
+<http://pypi.python.org/pypi/virtualenvwrapper>`_.  Run::
 
-    $ git clone git://github.com/ralphbean/tw2.d3.git
+    $ git clone git://github.com/toscawidgets/tw2.d3.git
     $ cd tw2.d3
     $ mkvirtualenv tw2.d3
     (tw2.d3) $ pip install tw2.devtools
@@ -57,6 +57,3 @@ To give it a try you'll need git, mercurial, python, and virtualenv.  Run::
     (tw2.d3) $ paster tw2.browser
 
 ...and browse to http://localhost:8000/ to check it out.
-
-
-
