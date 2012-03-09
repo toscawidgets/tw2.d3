@@ -70,12 +70,6 @@ $.extend(tw2.d3, {
                 .attr("class", "bar")
                 .append("rect");
 
-                bar.enter().append("text")
-                .attr("class", "value")
-                .attr("dx", -3)
-                .attr("dy", ".35em")
-                .attr("text-anchor", "end");
-
                 bar.exit().remove();
 
                 bar.transition().duration(750).attr("transform", function(d) {
@@ -87,13 +81,6 @@ $.extend(tw2.d3, {
                 .attr("height", y.rangeBand())
                 .transition()
                 .attr("width", function(d) { return x(d.value); });
-
-                // This is not working yet.
-//                svg.selectAll("text.value")
-//                .data(data)
-//                .attr("y", y.rangeBand() / 2)
-//                .attr("x", function(d) { return x(d.value); })
-//                .text(function(d) { return format(d.value); });
 
                 svg.selectAll("g.x").transition().duration(750).call(xAxis);
                 svg.selectAll("g.y").transition().duration(750).call(yAxis);

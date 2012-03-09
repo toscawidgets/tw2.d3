@@ -2,10 +2,6 @@
     fill: steelblue;
 }
 
-text.value {
-    fill: white;
-}
-
 .axis {
     shape-rendering: crispEdges;
 }
