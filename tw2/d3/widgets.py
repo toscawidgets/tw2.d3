@@ -44,15 +44,12 @@ class BarChart(D3Widget):
     height = twc.Param("Height of the chart in pixels.", default=930)
     padding = twc.Param("A list of ints [top, right, bottom, left]",
                         default=[30, 10, 10, 30])
-    fmtstr = twc.Param("A format string for numeric values.",
-                       default=",.0f")
 
     def prepare(self):
 
         # Check the types of everything
         int(self.width)
         int(self.height)
-        str(self.fmtstr)
         self.padding = [int(ele) for ele in self.padding]
 
         if self.data == None:
@@ -63,11 +60,10 @@ class BarChart(D3Widget):
         # Munge our data so d3 can understand it
         json = [{'key': k, 'value': v} for k, v in self.data.iteritems()]
 
-        self.add_call(twc.js_function('tw2.d3.bar')(
+        self.add_call(twc.js_function('tw2.d3.bar.init')(
             self.attrs['id'],
             json,
             self.width,
             self.height,
             self.padding,
-            self.fmtstr,
         ))
