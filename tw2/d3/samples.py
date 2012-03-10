@@ -32,3 +32,5 @@ class DemoBarChart(BarChart):
         apples=21,
         bananas=63,
     )
+
+    interval = 1000

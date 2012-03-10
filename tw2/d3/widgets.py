@@ -45,11 +45,14 @@ class BarChart(D3Widget):
     padding = twc.Param("A list of ints [top, right, bottom, left]",
                         default=[30, 10, 10, 30])
 
+    interval = twc.Param("Redraw-interval in milliseconds.", default=0)
+
     def prepare(self):
 
         # Check the types of everything
         int(self.width)
         int(self.height)
+        int(self.interval)
         self.padding = [int(ele) for ele in self.padding]
 
         if self.data == None:
@@ -66,4 +69,5 @@ class BarChart(D3Widget):
             self.width,
             self.height,
             self.padding,
+            self.interval,
         ))
