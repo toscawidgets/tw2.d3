@@ -8,22 +8,32 @@ $.extend(tw2.d3, {
         filter: function(data) {
             // Generic utility.  Remove elements with 0 value from the list.
             // Equivalent to the following python:
-            //     >>> data = [d for d in data if d.value > 0]
+            //     >>> data = [d for d in data if d.value > epsilon]
+            if (typeof epsilon === 'undefined') { epsilon = 0.001; }
             for (var i = 0; i < data.length; i++) {
-                if (data[i].value <= 0) {
+                if (data[i].value <= epsilon) {
                     data.splice(i, 1);
                 }
             }
             return data;
         },
+        schedule_bump_random: function(selector, interval) {
+            // Schedule randomly bump data points for `selector`
+            setInterval(function() {
+                for (var i = 0; i < tw2.store[selector].data.length; i++) {
+                    tw2.store[selector].data[i].value += Math.random() * 3;
+                }
+            }, interval);
+        }
     },
+
     bar: {
-        init: function (selector, data, width, height, padding) {
+        init: function (selector, data, width, height, padding, interval) {
             $(document).ready(function() {
-                tw2.d3.bar._init(selector, data, width, height, padding);
+                tw2.d3.bar._init(selector, data, width, height, padding, interval);
             });
         },
-        _init: function (selector, data, width, height, padding) {
+        _init: function (selector, data, width, height, padding, interval) {
             var w = width - padding[1] - padding[3];
             var h = height - padding[0] - padding[2];
 
@@ -49,20 +59,22 @@ $.extend(tw2.d3, {
                 width: width,
                 height: height,
                 padding: padding,
+                interval: interval,
             };
 
             svg.append("g").attr("class", "x axis")
             svg.append("g").attr("class", "y axis")
 
-            tw2.d3.bar.redraw(selector)
-            setInterval(function() { tw2.d3.bar.redraw(selector)}, 1000);
+            tw2.d3.bar.redraw(selector, 'cubic-in-out')
+            if (interval > 0) {
+                setInterval(function() {tw2.d3.bar.redraw(selector)}, interval);
+            }
         },
-        redraw: function(selector) {
-            tw2.store[selector].data[0].value -= 15;
-            tw2.store[selector].data = tw2.d3.util.filter(
-                tw2.store[selector].data
-            );
+        redraw: function(selector, easing) {
+            if (typeof easing === 'undefined') { easing = 'linear'; }
+
             var data = tw2.store[selector].data;
+            var interval = tw2.store[selector].interval;
 
             var w =
             tw2.store[selector].width - 
@@ -95,20 +107,45 @@ $.extend(tw2.d3, {
 
             bar.exit().remove();
 
-            bar.transition().duration(750).attr("transform", function(d) {
+            bar.transition().duration(interval).attr("transform", function(d) {
                 return "translate(0," + y(d.key) + ")";
             });
 
             bar.selectAll("rect")
             .data(data, function(d) { return d.key })
             .attr("height", y.rangeBand())
-            .transition()
+            .transition().ease(easing).duration(interval)
             .attr("width", function(d) { return x(d.value); });
 
             tw2.store[selector].svg.selectAll("g.x")
-            .transition().duration(750).call(xAxis);
+            .transition().ease(easing).duration(interval).call(xAxis);
             tw2.store[selector].svg.selectAll("g.y")
-            .transition().duration(750).call(yAxis);
+            .transition().ease(easing).duration(interval).call(yAxis);
+        },
+        decay_amount: function(selector, amount, epsilon) {
+            for (var i = 0; i < tw2.store[selector].data.length; i++) {
+                tw2.store[selector].data[i].value -= amount;
+            }
+            tw2.store[selector].data = tw2.d3.util.filter(
+                tw2.store[selector].data,
+                epsilon
+            );
+        },
+        schedule_halflife: function(selector, halflife, interval, epsilon) {
+            setInterval(function() {
+                // halflife means 'In this many milliseconds, the value should
+                // be half of what it was.'
+                var factor = 2 * halflife / interval;
+                var amount;
+                for (var i = 0; i < tw2.store[selector].data.length; i++) {
+                    amount = tw2.store[selector].data[i].value / factor;
+                    tw2.store[selector].data[i].value -= amount;
+                }
+                tw2.store[selector].data = tw2.d3.util.filter(
+                    tw2.store[selector].data,
+                    epsilon
+                );
+            }, interval);
         },
     },
 });
