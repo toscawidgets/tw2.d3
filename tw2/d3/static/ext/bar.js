@@ -24,7 +24,29 @@ $.extend(tw2.d3, {
                     tw2.store[selector].data[i].value += Math.random() * 3;
                 }
             }, interval);
-        }
+        },
+        index_of: function(selector, key) {
+            var index = 0;
+            for (var i = 0; i < tw2.store[selector].data.length; i++) {
+                if (tw2.store[selector].data[i].key == key) {
+                    return i;
+                }
+            }
+            return null;
+        },
+        set_value: function(selector, key, value) {
+            var index = tw2.d3.util.index_of(selector, key);
+            tw2.store[selector].data[index].value = value;
+        },
+        bump_value: function(selector, key, value) {
+            var index = tw2.d3.util.index_of(selector, key);
+            if (index == null) {
+                tw2.store[selector].data.push({'key': key, 'value': +value});
+            } else {
+                tw2.store[selector].data[index].value =
+                tw2.store[selector].data[index].value + 1;
+            }
+        },
     },
 
     bar: {
