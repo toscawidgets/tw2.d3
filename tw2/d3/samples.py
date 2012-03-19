@@ -11,6 +11,7 @@ import tw2.core as twc
 
 from widgets import (
     BarChart,
+    TimeSeriesChart,
 )
 
 import random
@@ -60,3 +61,7 @@ class DemoBarChart(BarChart):
             self.attrs['id'],
             100
         ))
+
+class DemoTimeSeriesChart(TimeSeriesChart):
+    n = 200
+    data = [random.random() for i in range(n)]
