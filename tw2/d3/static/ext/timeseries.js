@@ -69,9 +69,6 @@ $.extend(tw2.d3, {
 
             tick();
 
-            d3.select(window)
-            .on("scroll", function() { tw2.store[selector].value++; });
-
             function tick() {
                 // update the domains
                 now = new Date();
