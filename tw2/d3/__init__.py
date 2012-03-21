@@ -8,4 +8,5 @@ d3 itself can be found here:  http://mbostock.github.com/d3/
 
 from widgets import (
     BarChart,
+    TimeSeriesChart,
 )

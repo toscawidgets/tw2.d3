@@ -71,3 +71,48 @@ class BarChart(D3Widget):
             self.padding,
             self.interval,
         ))
+
+
+class TimeSeriesChart(D3Widget):
+    resources = D3Widget.resources + [
+        twc.JSLink(modname=modname, filename="static/ext/timeseries.js"),
+        twc.CSSLink(modname=modname, filename="static/ext/timeseries.css"),
+    ]
+
+    data = twc.Param("An list of values in a timeseries.", default=None)
+    width = twc.Param("Width of the chart in pixels.", default=960)
+    height = twc.Param("Height of the chart in pixels.", default=120)
+    padding = twc.Param("A list of ints [top, right, bottom, left]",
+                        default=[6, 0, 20, 40])
+
+    interval = twc.Param("Redraw-interval in milliseconds.", default=0)
+    n = twc.Param('Number of buckets.', default=243)
+    duration = twc.Param(
+        'Number of seconds of data to display.', default=750)
+
+    def prepare(self):
+
+        # Check the types of everything
+        int(self.width)
+        int(self.height)
+        int(self.interval)
+        self.padding = [int(ele) for ele in self.padding]
+
+        if self.data == None:
+            raise ValueError("TimeSeriesChart must be provided a `data` dict")
+
+        if type(self.data) != list:
+            raise ValueError("TimeSeriesChart data must be of type `list`")
+
+        super(TimeSeriesChart, self).prepare()
+
+        self.add_call(twc.js_function('tw2.d3.timeseries.init')(
+            self.attrs['id'],
+            self.data,
+            self.width,
+            self.height,
+            self.padding,
+            self.interval,
+            self.n,
+            self.duration,
+        ))
