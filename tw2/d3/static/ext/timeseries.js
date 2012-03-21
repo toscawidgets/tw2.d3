@@ -7,7 +7,7 @@ $.extend(tw2.d3, {
         init: function (
             selector, data, _width, _height,
             padding, interval, n, duration
-        ) {
+            ) {
             $(document).ready(function() {
                 tw2.d3.timeseries._init(
                     selector, data, _width, _height,
@@ -18,9 +18,9 @@ $.extend(tw2.d3, {
         _init: function (
             selector, data, _width, _height,
             padding, interval, n, duration
-        ) {
+            ) {
             var now = new Date(Date.now() - duration);
-            var count = 0;
+            tw2.store[selector] = {value: 0};
 
             var margin = {
                 top: padding[0],
@@ -70,7 +70,7 @@ $.extend(tw2.d3, {
             tick();
 
             d3.select(window)
-            .on("scroll", function() { ++count; });
+            .on("scroll", function() { tw2.store[selector].value++; });
 
             function tick() {
                 // update the domains
@@ -78,9 +78,9 @@ $.extend(tw2.d3, {
                 x.domain([now - (n - 2) * duration, now - duration]);
                 y.domain([0, d3.max(data)]);
 
-                // push the accumulated count onto the back, and reset the count
-                data.push(Math.min(30, count));
-                count = 0;
+                // push the accumulated value onto the back, and reset the value
+                data.push(Math.min(30, tw2.store[selector].value));
+                tw2.store[selector].value = 0;
 
                 // redraw the line
                 svg.select(".line")
