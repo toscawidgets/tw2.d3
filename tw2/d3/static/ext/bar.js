@@ -4,7 +4,7 @@ if ( typeof tw2.d3 == "undefined" ) tw2.d3 = {};
 
 $.extend(tw2.d3, {
     util: {
-        filter: function(data) {
+        filter: function(data, epsilon) {
             // Generic utility.  Remove elements with 0 value from the list.
             // Equivalent to the following python:
             //     >>> data = [d for d in data if d.value > epsilon]
@@ -151,6 +151,11 @@ $.extend(tw2.d3, {
                 tw2.store[selector].data,
                 epsilon
             );
+        },
+        schedule_decay: function(selector, amount, interval, epsilon) {
+            setInterval(function() {
+                tw2.d3.bar.decay_amount(selector, amount, epsilon);
+            }, interval);
         },
         schedule_halflife: function(selector, halflife, interval, epsilon) {
             setInterval(function() {
