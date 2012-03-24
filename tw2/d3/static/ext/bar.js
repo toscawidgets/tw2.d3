@@ -46,6 +46,13 @@ $.extend(tw2.d3, {
                 tw2.store[selector].data[index].value + 1;
             }
         },
+        keys: function(selector) {
+            var keys = [];
+            for (var i = 0; i < tw2.store[selector].data.length; i++) {
+                keys.push(tw2.store[selector].data[i].key);
+            }
+            return keys;
+        },
     },
 
     bar: {
