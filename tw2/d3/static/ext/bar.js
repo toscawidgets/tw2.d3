@@ -16,6 +16,10 @@ $.extend(tw2.d3, {
             }
             return data;
         },
+        remove_key: function(selector, key) {
+            var i = tw2.d3.util.index_of(selector, key);
+            tw2.store[selector].data.splice(i, 1);
+        },
         schedule_bump_random: function(selector, interval) {
             // Schedule randomly bump data points for `selector`
             setInterval(function() {
