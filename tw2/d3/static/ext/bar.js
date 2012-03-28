@@ -4,7 +4,7 @@ if ( typeof tw2.d3 == "undefined" ) tw2.d3 = {};
 
 $.extend(tw2.d3, {
     util: {
-        filter: function(data) {
+        filter: function(data, epsilon) {
             // Generic utility.  Remove elements with 0 value from the list.
             // Equivalent to the following python:
             //     >>> data = [d for d in data if d.value > epsilon]
@@ -15,6 +15,10 @@ $.extend(tw2.d3, {
                 }
             }
             return data;
+        },
+        remove_key: function(selector, key) {
+            var i = tw2.d3.util.index_of(selector, key);
+            tw2.store[selector].data.splice(i, 1);
         },
         schedule_bump_random: function(selector, interval) {
             // Schedule randomly bump data points for `selector`
@@ -45,6 +49,13 @@ $.extend(tw2.d3, {
                 tw2.store[selector].data[index].value =
                 tw2.store[selector].data[index].value + 1;
             }
+        },
+        keys: function(selector) {
+            var keys = [];
+            for (var i = 0; i < tw2.store[selector].data.length; i++) {
+                keys.push(tw2.store[selector].data[i].key);
+            }
+            return keys;
         },
     },
 
@@ -151,6 +162,11 @@ $.extend(tw2.d3, {
                 tw2.store[selector].data,
                 epsilon
             );
+        },
+        schedule_decay: function(selector, amount, interval, epsilon) {
+            setInterval(function() {
+                tw2.d3.bar.decay_amount(selector, amount, epsilon);
+            }, interval);
         },
         schedule_halflife: function(selector, halflife, interval, epsilon) {
             setInterval(function() {
