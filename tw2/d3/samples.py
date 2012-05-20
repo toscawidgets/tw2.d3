@@ -43,7 +43,7 @@ class DemoBarChart(BarChart):
     # This only gets called just before the widget is displayed
     def prepare(self):
         super(DemoBarChart, self).prepare()
-        # Register a javascript call to a utility function that tw2.d3 provides.
+        # Register a javascript call to a utility function that tw2.d3 provides
         # This one indicates that every element in the data should decay by a
         # certain halflife (2000ms), that function should be run every 1000ms,
         # and elements should just be removed if their value goes below a
@@ -61,6 +61,7 @@ class DemoBarChart(BarChart):
             self.attrs['id'],
             100
         ))
+
 
 class DemoTimeSeriesChart(TimeSeriesChart):
     n = 200
