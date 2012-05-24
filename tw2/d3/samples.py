@@ -64,5 +64,6 @@ class DemoBarChart(BarChart):
 
 
 class DemoTimeSeriesChart(TimeSeriesChart):
+    width = 570
     n = 200
     data = [random.random() for i in range(n)]
