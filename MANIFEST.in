@@ -1,3 +1,4 @@
 include README.rst
+include LICENSE.txt
 recursive-include tw2/d3/templates *
 recursive-include tw2/d3/static *
