@@ -154,6 +154,9 @@ class ChordDiagram(D3Widget):
         if self.colors == None:
             raise ValueError("ChordDiagram must be provided a `colors` list")
 
+        # Not necessarily so!
+        # TODO -- We can use this to get linear scaled colors.
+        #       var fill = d3.scale.category10();
         if len(self.data) != len(self.colors):
             raise ValueError("ChordDiagram needs 1 color per datum.")
 
