@@ -116,3 +116,56 @@ class TimeSeriesChart(D3Widget):
             self.n,
             self.duration,
         ))
+
+
+class ChordDiagram(D3Widget):
+    resources = D3Widget.resources + [
+        twc.JSLink(modname=modname, filename="static/ext/chord.js"),
+        twc.CSSLink(modname=modname, filename="static/ext/chord.css"),
+    ]
+
+    data = twc.Param("An OrderedDict of key-value pairs", default=None)
+    width = twc.Param("Width of the chart in pixels.", default=960)
+    height = twc.Param("Height of the chart in pixels.", default=960)
+    padding = twc.Param("A list of ints [top, right, bottom, left]",
+                        default=[10, 10, 10, 30])
+    radial_padding = twc.Param("Padding between the radial sections.",
+                               default=0.15)
+
+    colors = twc.Param("A list of #RGB strings", default=None)
+    interval = twc.Param("Redraw-interval in milliseconds.", default=0)
+
+    def prepare(self):
+
+        # Check the types of everything
+        int(self.width)
+        int(self.height)
+        int(self.interval)
+        float(self.radial_padding)
+        self.padding = [int(ele) for ele in self.padding]
+
+        if self.data == None:
+            raise ValueError("ChordDiagram must be provided a `data` matrix")
+
+        lengths = map(len, self.data)
+        if not all([length == len(self.data) for length in lengths]):
+            raise ValueError("ChordDiagram `data` must be NxN.")
+
+        if self.colors == None:
+            raise ValueError("ChordDiagram must be provided a `colors` list")
+
+        if len(self.data) != len(self.colors):
+            raise ValueError("ChordDiagram needs 1 color per datum.")
+
+        super(ChordDiagram, self).prepare()
+
+        self.add_call(twc.js_function('tw2.d3.chord.init')(
+            self.attrs['id'],
+            self.data,
+            self.width,
+            self.height,
+            self.padding,
+            self.colors,
+            float(self.radial_padding),
+            self.interval,
+        ))
