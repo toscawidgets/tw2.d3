@@ -13,7 +13,7 @@ modname = '.'.join(__name__.split('.')[:-1])
 
 d3_js = twc.JSLink(
     modname=modname,
-    filename='static/js/2.8.0/d3.v2.js',
+    filename='static/js/v3/d3.v3.js',
 )
 
 
